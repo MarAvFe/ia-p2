@@ -93,7 +93,7 @@ top.mainloop()
 
 
 aaq: Pawanobskewi       rel:etymological_origin_of      eng: Penobscot
-aaq: senabe     rel:etymological_origin_of      eng: sannup 
+aaq: senabe     rel:etymological_origin_of      eng: sannup
 abe: waniigan   rel:etymological_origin_of      eng: wangan
 abe: waniigan   rel:etymological_origin_of      eng: wannigan
 abs: beta       rel:etymological_origin_of      zsm: beta

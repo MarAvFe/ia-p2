@@ -1,5 +1,9 @@
+import logging
+from pyDatalog import pyEngine
 from pyDatalog.pyDatalog import assert_fact, load, create_terms, ask
-create_terms('padre, X,Y,Z,N,N1,F,  factorial, first_remainder, odd,even, _split')
+create_terms('padre, X,Y,Z,N,N1,F,  factorial, first_remainder, odd,even, _split, algo, algo2')
+#pyEngine.Logging = True
+#logging.basicConfig(level=logging.INFO)
 
 datos =[["senabe", "sannup"], ["waniigan","wangan"], ["waniigan","wannigan"]]
 
@@ -9,8 +13,23 @@ def sonPrimas(a, b):
 	pass
 
 
+
 def esHermano(_hermanoA, _hermanoB):
 	if (ask('padre(X,'+_hermanoA+')')==ask('padre(X,'+_hermanoB+')')):
+		print(_hermanoA +" es herman@ de  "+ _hermanoB)
+	else:
+		print(_hermanoA +" NO es herman@ de  "+ _hermanoB)
+
+
+def esHermanoNew(_hermanoA, _hermanoB):
+	# funciona, pero es por ser puro python.
+	a1 = ask("parent("+str(_hermanoA)+",X)")
+	a2 = ask("parent("+str(_hermanoB)+",X)")
+	flag = False
+	for h in a1.answers:
+		if h in a2.answers:
+			flag = True
+	if (flag):
 		print(_hermanoA +" es herman@ de  "+ _hermanoB)
 	else:
 		print(_hermanoA +" NO es herman@ de  "+ _hermanoB)
@@ -87,6 +106,33 @@ def listaIdiomasAportaron (idioma):
 	#Similar al anterior pero debe incluir porcentaje para todos los idiomas
 	pass
 
+
+
+def crearRelacion(linea):
+	# swe: bio-	rel:etymological_origin_of	swe: biologi
+	tmp = linea.split("\t")  # ["swe: bio-","rel:etymological_origin_of","swe: biologi"]
+	izq = tmp[0]  # swe: bio-
+	rel = tmp[1].split(":")[1]  # rel:etymological_origin_of
+	der = tmp[2].split("\n")[0]  # swe: biologi
+	assert_fact(rel, izq, der)
+
+def loadDBRels():
+	with open("../etymwn/etymwn.tsv") as f:
+		i = 0
+		for l in f:
+			#if(l.find("rel:has_derived_form") != -1) or (l.find("rel:etymological_origin_of") != -1):
+			if(l.find("rel:etymology") == -1):
+				continue
+			crearRelacion(l)
+			i += 1
+			if i%100000==0:
+				print(i)
+			if i>300000:
+				break
+		print("dbSize:",i)
+
+loadDBRels()
+
 def alimentarBD():
 	assert_fact('padre', 'A','B')
 	assert_fact('padre', 'A','F')
@@ -140,7 +186,13 @@ def alimentarBD():
 		cousin2(X,Y) <= cousin(X,W) & parent(Y,W)
 		start(X,Y) <= (Y==X[0:2])
 		related(X,Y) <= ancestor(X,P) & ancestor(Y,Q) & (P==Q)
+
+		parentRel(X,Y) <= etymology(X,Y)
+		parentRel(X,Y) <= etymology(X,Z) & parentRel(Z,Y)
+
 		""")
+		#parentRel(X,Y) <= is_derived_from(X,Y)
+		#parentRel(X,Y) <= is_derived_from(X,Z) & parentRel(Z,Y)
 	# el start muestra cómo editar la salida o comparación.
 	# por ejemplo cuando agreguemos 'eng: doubt', podríamos comparar los idiomas con este método con Y==[:5]
 
@@ -165,5 +217,12 @@ def main():
 	print('start:',ask('start(bill,X)'))
 	print('related:',ask('related(bill,X)'))
 	print('related:',ask('related(mike3,X)'))
+	esHermanoNew('bill','john')
+	esHermanoNew('luke','john')
+	print('related:',ask('parentRel(Japan,X)'))
 
 main()
+
+#definicion lógica externa
+algo(X,Y) <= (Y=="Beep")
+print(algo("doot",X))
