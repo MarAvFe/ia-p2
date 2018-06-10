@@ -111,6 +111,8 @@ def alimentarBD():
 	assert_fact('parent', 'john2','mike2')
 	assert_fact('parent', 'tom2','brian2')
 	assert_fact('parent', 'bill2','john2')
+	assert_fact('parent', 'mike3','bob3')
+	assert_fact('parent', 'roy3','bob3')
 	# bob
 	#  -mike
 	#    -brian
@@ -125,6 +127,10 @@ def alimentarBD():
 	#    -luke2
 	#    -john2
 	#      -bill2
+	#
+	# bob3
+	#   -mike3
+	#   -roy3
 	load("""
 		brother(X,Y) <= parent(X,Z) & parent(Y,Z) & (X!=Y)
 		uncle(X,Y) <= parent(Y,Z) & brother(X,Z)
@@ -132,7 +138,13 @@ def alimentarBD():
 		ancestor(X,Y) <= parent(X,Z) & ancestor(Z,Y)
 		cousin(X,Y) <= parent(X,Z) & parent(Y,W) & brother(Z,W)
 		cousin2(X,Y) <= cousin(X,W) & parent(Y,W)
+		start(X,Y) <= (Y==X[0:2])
+		related(X,Y) <= ancestor(X,P) & ancestor(Y,Q) & (P==Q)
 		""")
+	# el start muestra cómo editar la salida o comparación.
+	# por ejemplo cuando agreguemos 'eng: doubt', podríamos comparar los idiomas con este método con Y==[:5]
+
+	# el related está más o menos. inestable, tal vez
 
 def main():
 	alimentarBD()
@@ -150,5 +162,8 @@ def main():
 	print('cousin luke:',ask('cousin(luke,X)'))  # luke2, brian2, john2
 	print('cousin2 luke:',ask('cousin2(luke,X)'))  # bill2, tom2
 	print('cousin2 bill:',ask('cousin2(bill,X)'))  # marty
+	print('start:',ask('start(bill,X)'))
+	print('related:',ask('related(bill,X)'))
+	print('related:',ask('related(mike3,X)'))
 
 main()
