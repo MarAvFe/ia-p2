@@ -87,3 +87,23 @@ btn.grid(column=0, row=2)
 
 top.geometry('650x200')
 top.mainloop()
+
+
+
+
+
+aaq: Pawanobskewi       rel:etymological_origin_of      eng: Penobscot
+aaq: senabe     rel:etymological_origin_of      eng: sannup 
+abe: waniigan   rel:etymological_origin_of      eng: wangan
+abe: waniigan   rel:etymological_origin_of      eng: wannigan
+abs: beta       rel:etymological_origin_of      zsm: beta
+adt: yuru       rel:etymological_origin_of      eng: euro
+afr: -heid      rel:etymological_origin_of      afr: moontlikheid
+afr: -ig        rel:etymological_origin_of      afr: denkbeeldig
+afr: -ig        rel:etymological_origin_of      afr: tydig
+afr: -ing       rel:etymological_origin_of      afr: verbuiging
+afr: -lik       rel:etymological_origin_of      afr: persoonlik
+afr: -lik       rel:etymological_origin_of      afr: tydelik
+afr: -lik       rel:etymological_origin_of      afr: wetenskaplik
+afr: -lik       rel:etymological_origin_of      afr: wetlik
+afr: -lik       rel:has_derived_form    afr: wetenskaplik

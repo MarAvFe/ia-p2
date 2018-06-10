@@ -1,5 +1,5 @@
-from pyDatalog import pyDatalog
-pyDatalog.create_terms('padre, X,Y,Z,N,N1,F,  factorial, first_remainder, odd,even, _split')
+from pyDatalog.pyDatalog import assert_fact, load, create_terms, ask
+create_terms('padre, X,Y,Z,N,N1,F,  factorial, first_remainder, odd,even, _split')
 
 datos =[["senabe", "sannup"], ["waniigan","wangan"], ["waniigan","wannigan"]]
 
@@ -10,37 +10,37 @@ def sonPrimas(a, b):
 
 
 def esHermano(_hermanoA, _hermanoB):
-	if (pyDatalog.ask('padre(X,'+_hermanoA+')')==pyDatalog.ask('padre(X,'+_hermanoB+')')):
+	if (ask('padre(X,'+_hermanoA+')')==ask('padre(X,'+_hermanoB+')')):
 		print(_hermanoA +" es herman@ de  "+ _hermanoB)
 	else:
 		print(_hermanoA +" NO es herman@ de  "+ _hermanoB)
 
 
 def esHijo(_padre, _hijo):
-	consulta = pyDatalog.ask('padre(X,'+_hijo+')')
+	consulta = ask('padre(X,'+_hijo+')')
 	if (consulta.answers[0][0]==_padre):
 		print(_hijo +" es hij@ de  "+ _padre)
 	else:
 		print(_hijo +" NO es hij@ de  "+ _padre)
 
 def esTio(_tio, _sobrino):
-	padreSobrino = pyDatalog.ask('padre(X,'+_sobrino+')').answers[0][0]
-	if (pyDatalog.ask('padre(X,'+_tio+')')==pyDatalog.ask('padre(X,'+padreSobrino+')')):
+	padreSobrino = ask('padre(X,'+_sobrino+')').answers[0][0]
+	if (ask('padre(X,'+_tio+')')==ask('padre(X,'+padreSobrino+')')):
 		print(_tio +" es tí@ de  "+ _sobrino)
 	else:
 		print(_tio +" NO es tí@ de  "+ _sobrino)
 
 def esPrimo(_primoA, _primoB):
-	padrePrimoA = pyDatalog.ask('padre(X,'+_primoA+')').answers[0][0]
-	padrePrimoB = pyDatalog.ask('padre(X,'+_primoB+')').answers[0][0]
-	if (pyDatalog.ask('padre(X,'+padrePrimoA+')')==pyDatalog.ask('padre(X,'+padrePrimoB+')')):
+	padrePrimoA = ask('padre(X,'+_primoA+')').answers[0][0]
+	padrePrimoB = ask('padre(X,'+_primoB+')').answers[0][0]
+	if (ask('padre(X,'+padrePrimoA+')')==ask('padre(X,'+padrePrimoB+')')):
 		print(_primoA +" es prim@ de  "+ _primoB)
 	else:
 		print(_primoA +" NO es prim@ de  "+ _primoB)
 
 
 def esHijo2(_padre, _hijo):
-	consulta = pyDatalog.ask('padre(X,'+_hijo+')')
+	consulta = ask('padre(X,'+_hijo+')')
 	if (consulta.answers[0][0]==_padre):
 		print(_hijo +" es hij@ de  "+ _padre)
 	else:
@@ -55,14 +55,14 @@ def estaRelacionadaIdioma(palabra, idioma):
 
 def palabrasOriginadas(palabra, idioma):
 	# devolver lista de palabras
-	#recursiva. 
+	#recursiva.
 	#1º Buscar todas las hijas de esa palabra, según idioma.
 	#Las hijas pasan a ser padres y pasa a buscar a sus hijas (siempre usando el filtro del idioma)
-	#pyDatalog.load("""
+	#load("""
 	#	(factorial[N] == F) <= (N < 2) & (F==1)
 	#	(factorial[N] == F) <= (N > 1) & (N1 == N-1) & (F == N*factorial[N1])
 	#""")
-	#print(pyDatalog.ask('factorial[3]==N')) # prints a set with one element: (3,6)
+	#print(ask('factorial[3]==N')) # prints a set with one element: (3,6)
 	pass
 
 def listarIdiomasRelacionados(palabra):
@@ -83,21 +83,56 @@ def idiomaMasAporto (idiomaA, idiomaB):
 	pass
 
 def listaIdiomasAportaron (idioma):
-	# LIstar todos los idiomas que aportaron a otro. 
+	# LIstar todos los idiomas que aportaron a otro.
 	#Similar al anterior pero debe incluir porcentaje para todos los idiomas
 	pass
 
 def alimentarBD():
-	pyDatalog.assert_fact('padre', 'A','B') 
-	pyDatalog.assert_fact('padre', 'A','F') 
-	pyDatalog.assert_fact('padre', 'A','X') 
-	pyDatalog.assert_fact('padre', 'A','Z') 
-	pyDatalog.assert_fact('padre', 'B','D') 
-	pyDatalog.assert_fact('padre', 'B','C') 
-	pyDatalog.assert_fact('padre', 'F','G') 
-	pyDatalog.assert_fact('padre', 'C','P') 	
-	pyDatalog.assert_fact('padre', 'O','D')	
+	assert_fact('padre', 'A','B')
+	assert_fact('padre', 'A','F')
+	assert_fact('padre', 'A','X')
+	assert_fact('padre', 'A','Z')
+	assert_fact('padre', 'B','D')
+	assert_fact('padre', 'B','C')
+	assert_fact('padre', 'F','G')
+	assert_fact('padre', 'C','P')
+	assert_fact('padre', 'O','D')
 
+	assert_fact('parent', 'mike','bob')
+	assert_fact('parent', 'mike2','bob')
+	assert_fact('parent', 'brian','mike')
+	assert_fact('parent', 'luke','mike')
+	assert_fact('parent', 'john','mike')
+	assert_fact('parent', 'tom','brian')
+	assert_fact('parent', 'marty','tom')
+	assert_fact('parent', 'bill','john')
+	assert_fact('parent', 'brian2','mike2')
+	assert_fact('parent', 'luke2','mike2')
+	assert_fact('parent', 'john2','mike2')
+	assert_fact('parent', 'tom2','brian2')
+	assert_fact('parent', 'bill2','john2')
+	# bob
+	#  -mike
+	#    -brian
+	#      -tom
+	#        -marty
+	#    -luke
+	#    -john
+	#      -bill
+	#  -mike2
+	#    -brian2
+	#      -tom2
+	#    -luke2
+	#    -john2
+	#      -bill2
+	load("""
+		brother(X,Y) <= parent(X,Z) & parent(Y,Z) & (X!=Y)
+		uncle(X,Y) <= parent(Y,Z) & brother(X,Z)
+		ancestor(X,Y) <= parent(X,Y)
+		ancestor(X,Y) <= parent(X,Z) & ancestor(Z,Y)
+		cousin(X,Y) <= parent(X,Z) & parent(Y,W) & brother(Z,W)
+		cousin2(X,Y) <= cousin(X,W) & parent(Y,W)
+		""")
 
 def main():
 	alimentarBD()
@@ -107,5 +142,13 @@ def main():
 	esTio("F","C")
 	esPrimo("G","D")
 
+	print('parent bill:',ask('parent(bill,X)'))
+	print('ancestor bill:',ask('ancestor(bill,X)')) # john, mike, bob
+	print('uncle brian:',ask('uncle(brian,X)'))  # bill
+	print('brother john:',ask('brother(john,X)'))  # luke, brian
+	print('cousin bill:',ask('cousin(bill,X)'))  # tom
+	print('cousin luke:',ask('cousin(luke,X)'))  # luke2, brian2, john2
+	print('cousin2 luke:',ask('cousin2(luke,X)'))  # bill2, tom2
+	print('cousin2 bill:',ask('cousin2(bill,X)'))  # marty
 
 main()

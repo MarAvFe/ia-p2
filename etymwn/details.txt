@@ -4,14 +4,18 @@ tail -n 6031431 etymwn/etymwn.tsv | cut -d$'\t' -f2 | sort | uniq
 Relationships
 ===
 
-rel:derived
-rel:etymologically
-rel:etymologically_related
-rel:etymological_origin_of
-rel:etymology
-rel:has_derived_form
-rel:is_derived_from
-rel:variant:orthography
+rel:derived	 2
+rel:etymologically 1
+rel:etymologically_related 538558
+rel:etymological_origin_of 473433
+rel:etymology 473433
+rel:has_derived_form 2264744
+rel:is_derived_from 2264744
+rel:variant:orthography 16516
+
+
+
+
 
 
 ===
