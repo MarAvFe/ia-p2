@@ -2,9 +2,9 @@ import logging
 from pyDatalog import pyEngine
 from pyDatalog.pyDatalog import assert_fact, load, create_terms, ask
 create_terms('padre, X,Y,Z,N,N1,F,  factorial, first_remainder, odd,even, _split, algo, algo2')
+
 #pyEngine.Logging = True
 #logging.basicConfig(level=logging.INFO)
-
 datos =[["senabe", "sannup"], ["waniigan","wangan"], ["waniigan","wannigan"]]
 
 #---- Parentesco
@@ -117,19 +117,39 @@ def crearRelacion(linea):
 	assert_fact(rel, izq, der)
 
 def loadDBRels():
+	db = []
+	words = {}
+	numWords = 0
 	with open("../etymwn/etymwn.tsv") as f:
 		i = 0
 		for l in f:
-			#if(l.find("rel:has_derived_form") != -1) or (l.find("rel:etymological_origin_of") != -1):
-			if(l.find("rel:etymology") == -1):
+			tmp = l.split("\t")
+			lft = tmp[0]
+			rgt = tmp[2]
+			lftIdx = numWords
+			if lft in words:
 				continue
-			crearRelacion(l)
+			else:
+				words[lft] = (i,1)
+			if rgt in words:
+				continue
+			else:
+				words[rgt] = (i,2)
+			assert_fact(tmp[1],words[lft],words[rgt])
+
+			#if(l.find("rel:has_derived_form") != -1) or (l.find("rel:etymological_origin_of") != -1):
+			#if(l.find("rel:etymology") == -1):
+			#	continue
+			#db.append(l)  #crearRelacion(l)
 			i += 1
-			if i%100000==0:
+			if i%10000==0:
 				print(i)
-			if i>300000:
-				break
+			#if i>300000:
+			#	break
 		print("dbSize:",i)
+		print(words["eng: chickenpox"])
+		while True:
+			pass
 
 loadDBRels()
 
