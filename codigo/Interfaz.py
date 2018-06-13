@@ -28,41 +28,61 @@ def palabra_palabra():
     frameTexto = Frame(window,width=500,height=600 ,bg="gray91")
     frameTexto.place(x=200,y=0)
     #Checkbox
-    labelRelaciones = Label(frameCuadro, text="Relaciones a considerar",width=28,height=2)
-    labelRelaciones.place(x=0,y=10)
-    
-    checkBox_etymology = Checkbutton(frameCuadro, text="rel:etymology")
-    checkBox_etymology.place(x=50,y=70)
+    labelRelaciones = Label(frameCuadro, text="1. Relaciones a considerar",width=28,height=2)
+    labelRelaciones.place(x=0,y=0)
 
-    checkBox_derived = Checkbutton(frameCuadro, text="rel:has_derived_for")
-    checkBox_derived.place(x=50,y=100)
+    checkBox_etymology = Checkbutton(frameCuadro, text="rel:derived")
+    checkBox_etymology.place(x=50,y=30)
+    checkBox_etymology = Checkbutton(frameCuadro, text="rel:etymology")
+    checkBox_etymology.place(x=50,y=50)
+    checkBox_etymology = Checkbutton(frameCuadro, text="rel:etymology_related")
+    checkBox_etymology.place(x=50,y=70)
+    checkBox_etymology = Checkbutton(frameCuadro, text="rel:etymology_origin_of")
+    checkBox_etymology.place(x=50,y=90)
+    checkBox_etymology = Checkbutton(frameCuadro, text="rel:etymology")
+    checkBox_etymology.place(x=50,y=110)
+    checkBox_etymology = Checkbutton(frameCuadro, text="rel:has_derived_from")
+    checkBox_etymology.place(x=50,y=130)
+    checkBox_etymology = Checkbutton(frameCuadro, text="rel:variant_orthography")
+    checkBox_etymology.place(x=50,y=150)
+
     
     #Palabra 1
-    labelPalabra1 = Label(frameWigets, text="Palabra 1",width=28,height=2)
+    labelPalabra1 = Label(frameWigets, text="2. Palabra 1",width=28,height=2)
     labelPalabra1.place(x=0,y=10)
 
     entryPalabra1 = Entry(frameWigets,width=20)
     entryPalabra1.place(x=30,y=50)
 
     #Palabra 2
-    labelPalabra2 = Label(frameWigets, text="Palabra 2", width=28,height=2)
+    labelPalabra2 = Label(frameWigets, text="3. Palabra 2", width=28,height=2)
     labelPalabra2.place(x=0,y=110)
     
     entryPalabra2 = Entry(frameWigets,width=20)
     entryPalabra2.place(x=30,y=150)
 
     #menu
-    labelPalabra1 = Label(frameWigets, text="Determinar si las palabras son:",width=30,height=2)
+    labelPalabra1 = Label(frameWigets, text="4. Determinar si las palabras son:",width=30,height=2)
     labelPalabra1.place(x=0,y=200)
     
     menuOpciones = TTK.Combobox(frameWigets,values=("Hermanas", "Primas", "Hija una de otra","Tia","Primas con grado"), width=30)
     menuOpciones.place(x=0,y=240)
 
     #TextField
-    text=tkst.ScrolledText(frameTexto,width=60,height=37)
-    text.pack()
+    #text=tkst.ScrolledText(frameTexto,width=60,height=37)
+    #text.pack()
+
+    tree = TTK.Treeview(frameTexto)
+
+    tree.insert("",END,text="Nelson")
+    item = tree.insert("",0,text="Elemento1")
+    subItem = tree.insert(item, END, text = "Subelemento1")
+    a = "japones"
+    tree.insert(subItem,END, text = "elemento 3", iid=a)
+    tree.insert(a,END,text ="kulingao")
+    tree.pack() 
     
-    botonEjecutar=Button(frameWigets,width=28,height=2, text="Ejecutar",bg="yellow4")
+    botonEjecutar=Button(frameWigets,width=28,height=2, text="Ejecutar",bg="dodger blue")
     botonEjecutar.place(x=0,y=300)
     
     root.mainloop()
@@ -84,13 +104,22 @@ def palabra_idioma():
     frameTexto.place(x=200,y=0)
     #Checkbox
     labelRelaciones = Label(frameCuadro, text="1. Relaciones a considerar",width=28,height=2)
-    labelRelaciones.place(x=0,y=10)
+    labelRelaciones.place(x=0,y=0)
     
+    checkBox_etymology = Checkbutton(frameCuadro, text="rel:derived")
+    checkBox_etymology.place(x=50,y=30)
     checkBox_etymology = Checkbutton(frameCuadro, text="rel:etymology")
+    checkBox_etymology.place(x=50,y=50)
+    checkBox_etymology = Checkbutton(frameCuadro, text="rel:etymology_related")
     checkBox_etymology.place(x=50,y=70)
-
-    checkBox_derived = Checkbutton(frameCuadro, text="rel:has_derived_for")
-    checkBox_derived.place(x=50,y=100)
+    checkBox_etymology = Checkbutton(frameCuadro, text="rel:etymology_origin_of")
+    checkBox_etymology.place(x=50,y=90)
+    checkBox_etymology = Checkbutton(frameCuadro, text="rel:etymology")
+    checkBox_etymology.place(x=50,y=110)
+    checkBox_etymology = Checkbutton(frameCuadro, text="rel:has_derived_from")
+    checkBox_etymology.place(x=50,y=130)
+    checkBox_etymology = Checkbutton(frameCuadro, text="rel:variant_orthography")
+    checkBox_etymology.place(x=50,y=150)
     
     #Palabra 1
     labelPalabra1 = Label(frameWigets, text="2. Palabra",width=28,height=2)
@@ -114,10 +143,22 @@ def palabra_idioma():
     menuOpciones.place(x=0,y=240)
 
     #TextField
-    text=tkst.ScrolledText(frameTexto,width=60,height=37)
-    text.pack()
+    #text=tkst.ScrolledText(frameTexto,width=60,height=37)
+    #text.pack()
 
-    botonEjecutar=Button(frameWigets,width=28,height=2, text="Ejecutar",bg="yellow4")
+    tree = TTK.Treeview(frameTexto)
+
+    tree.insert("",END,text="Nelson")
+    item = tree.insert("",0,text="Elemento1")
+    subItem = tree.insert(item, END, text = "Subelemento1")
+
+    a = "japones"
+    tree.insert(subItem,END, text = "elemento 3", iid=a)
+    tree.insert(a,END,text ="kulingao")
+
+    tree.pack() 
+
+    botonEjecutar=Button(frameWigets,width=28,height=2, text="Ejecutar",bg="dodger blue")
     botonEjecutar.place(x=0,y=300)
     
     root.mainloop()
@@ -136,15 +177,25 @@ def idioma_idioma():
 
     frameTexto = Frame(window,width=500,height=600 ,bg="gray91")
     frameTexto.place(x=200,y=0)
+  
     #Checkbox
     labelRelaciones = Label(frameCuadro, text="1. Relaciones a considerar",width=28,height=2)
-    labelRelaciones.place(x=0,y=10)
+    labelRelaciones.place(x=0,y=0)
     
+    checkBox_etymology = Checkbutton(frameCuadro, text="rel:derived")
+    checkBox_etymology.place(x=50,y=30)
     checkBox_etymology = Checkbutton(frameCuadro, text="rel:etymology")
+    checkBox_etymology.place(x=50,y=50)
+    checkBox_etymology = Checkbutton(frameCuadro, text="rel:etymology_related")
     checkBox_etymology.place(x=50,y=70)
-
-    checkBox_derived = Checkbutton(frameCuadro, text="rel:has_derived_for")
-    checkBox_derived.place(x=50,y=100)
+    checkBox_etymology = Checkbutton(frameCuadro, text="rel:etymology_origin_of")
+    checkBox_etymology.place(x=50,y=90)
+    checkBox_etymology = Checkbutton(frameCuadro, text="rel:etymology")
+    checkBox_etymology.place(x=50,y=110)
+    checkBox_etymology = Checkbutton(frameCuadro, text="rel:has_derived_from")
+    checkBox_etymology.place(x=50,y=130)
+    checkBox_etymology = Checkbutton(frameCuadro, text="rel:variant_orthography")
+    checkBox_etymology.place(x=50,y=150)
     
     #Palabra 1
     labelPalabra1 = Label(frameWigets, text="2. Idioma 1",width=28,height=2)
@@ -164,16 +215,27 @@ def idioma_idioma():
     labelPalabra1 = Label(frameWigets, text="4. Determinar si las palabras son:",width=30,height=2)
     labelPalabra1.place(x=0,y=200)
     
-    menuOpciones = TTK.Combobox(frameWigets,values=("Contar palabras comunes", "Listar palabras comunes", "Idioma que mas aporto a otro","Listar idiomas que aportaron a otro"), width=30)
+    menuOpciones = TTK.Combobox(frameWigets,values=("Contar palabras comunes", "Listar palabras comunes", "Idioma que mas aporto a otro (%)","Listar idiomas que aportaron a otro"), width=30)
     menuOpciones.place(x=0,y=240)
 
-    botonEjecutar=Button(frameWigets,width=28,height=2, text="Ejecutar",bg="yellow4")
+    botonEjecutar=Button(frameWigets,width=28,height=2, text="Ejecutar",bg="dodger blue")
     botonEjecutar.place(x=0,y=300)
 
     #TextField
-    text=tkst.ScrolledText(frameTexto,width=60,height=37)
-    text.pack()
+    #text=tkst.ScrolledText(frameTexto,width=60,height=37)
+    #text.pack()
     
+    tree = TTK.Treeview(frameTexto)
+
+    tree.insert("",END,text="Nelson")
+    item = tree.insert("",0,text="Elemento1")
+    subItem = tree.insert(item, END, text = "Subelemento1")
+
+    a = "japones"
+    tree.insert(subItem,END, text = "elemento 3", iid=a)
+    tree.insert(a,END,text ="kulingao")
+
+    tree.pack()    
     root.mainloop()
     
 
