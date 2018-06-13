@@ -1,71 +1,14 @@
+#!/usr/bin/python
+import time
+import threading
 import logging
-from pyDatalog import pyEngine
+from pyDatalog import pyEngine, Logic
 from pyDatalog.pyDatalog import assert_fact, load, create_terms, ask
-create_terms('padre, X,Y,Z,N,N1,F,  factorial, first_remainder, odd,even, _split, algo, algo2')
+create_terms('derived, etymologically, etymologically_related, etymology, has_derived_form, variant, esHijo, sonHermanos, esTio, sonPrimos, A, B, P1,P2, T, S, PP1, PP2, G1,G,esHijo, etymology,etymological_origin_of,has_derived_form,is_derived_from, H, P, IH,IP,R')
 
-#pyEngine.Logging = True
-#logging.basicConfig(level=logging.INFO)
+pyEngine.Logging = True
+logging.basicConfig(level=logging.INFO)
 datos =[["senabe", "sannup"], ["waniigan","wangan"], ["waniigan","wannigan"]]
-
-#---- Parentesco
-def sonPrimas(a, b):
-	# Devuelve el grado
-	pass
-
-
-
-def esHermano(_hermanoA, _hermanoB):
-	if (ask('padre(X,'+_hermanoA+')')==ask('padre(X,'+_hermanoB+')')):
-		print(_hermanoA +" es herman@ de  "+ _hermanoB)
-	else:
-		print(_hermanoA +" NO es herman@ de  "+ _hermanoB)
-
-
-def esHermanoNew(_hermanoA, _hermanoB):
-	# funciona, pero es por ser puro python.
-	a1 = ask("parent("+str(_hermanoA)+",X)")
-	a2 = ask("parent("+str(_hermanoB)+",X)")
-	flag = False
-	for h in a1.answers:
-		if h in a2.answers:
-			flag = True
-	if (flag):
-		print(_hermanoA +" es herman@ de  "+ _hermanoB)
-	else:
-		print(_hermanoA +" NO es herman@ de  "+ _hermanoB)
-
-
-def esHijo(_padre, _hijo):
-	consulta = ask('padre(X,'+_hijo+')')
-	if (consulta.answers[0][0]==_padre):
-		print(_hijo +" es hij@ de  "+ _padre)
-	else:
-		print(_hijo +" NO es hij@ de  "+ _padre)
-
-def esTio(_tio, _sobrino):
-	padreSobrino = ask('padre(X,'+_sobrino+')').answers[0][0]
-	if (ask('padre(X,'+_tio+')')==ask('padre(X,'+padreSobrino+')')):
-		print(_tio +" es tí@ de  "+ _sobrino)
-	else:
-		print(_tio +" NO es tí@ de  "+ _sobrino)
-
-def esPrimo(_primoA, _primoB):
-	padrePrimoA = ask('padre(X,'+_primoA+')').answers[0][0]
-	padrePrimoB = ask('padre(X,'+_primoB+')').answers[0][0]
-	if (ask('padre(X,'+padrePrimoA+')')==ask('padre(X,'+padrePrimoB+')')):
-		print(_primoA +" es prim@ de  "+ _primoB)
-	else:
-		print(_primoA +" NO es prim@ de  "+ _primoB)
-
-
-def esHijo2(_padre, _hijo):
-	consulta = ask('padre(X,'+_hijo+')')
-	if (consulta.answers[0][0]==_padre):
-		print(_hijo +" es hij@ de  "+ _padre)
-	else:
-		print(_hijo +" NO es hij@ de  "+ _padre)
-
-
 
 # -- Operaciones entre palabra e idioma
 def estaRelacionadaIdioma(palabra, idioma):
@@ -116,133 +59,194 @@ def crearRelacion(linea):
 	der = tmp[2].split("\n")[0]  # swe: biologi
 	assert_fact(rel, izq, der)
 
+
+class myThread (threading.Thread):
+	def __init__(self, threadID, loadStr, logic):
+		threading.Thread.__init__(self)
+		self.threadID = threadID
+		self.loadStr = loadStr
+		self.logic = logic
+	def run(self):
+		threadLock.acquire()
+		Logic(self.logic)
+		loadBigString(self.loadStr, self.threadID)
+		threadLock.release()
+
+def loadBigString(string,cnt):
+	try:
+		load(string)
+	except Exception:
+		import traceback
+		print( traceback.format_exc())
+
+db = []
+threadLock = threading.Lock()
 def loadDBRels():
-	db = []
 	words = {}
+	langs = {}
+	derivedLoadStr = ""
+	etymologicallyLoadStr = ""
+	etymologically_relatedLoadStr = ""
+	etymologyLoadStr = ""
+	has_derived_formLoadStr = ""
+	variantLoadStr = ""
+	loadStrs = ["","","","","",""]
+	loadStrsNums = [0,0,0,0,0,0]
 	numWords = 0
-	with open("../etymwn/etymwn.tsv") as f:
+	threads = []
+	#with open("../etymwn/etymwn.tsv") as f:
+	with open("../etymwn/summaryDB.tsv") as f:
 		i = 0
 		for l in f:
 			tmp = l.split("\t")
+			rel = tmp[1]
+			if(rel == 'rel:etymological_origin_of' or rel == 'rel:is_derived_from'):
+				#print(rel)
+				continue
+
 			lft = tmp[0]
 			rgt = tmp[2]
-			lftIdx = numWords
-			if lft in words:
-				continue
-			else:
-				words[lft] = (i,1)
-			if rgt in words:
-				continue
-			else:
-				words[rgt] = (i,2)
-			assert_fact(tmp[1],words[lft],words[rgt])
+			tmpLft = lft.split(': ')
+			langLft, wordLft = tmpLft[0], tmpLft[1]
+			tmpRgt = rgt.split(': ')
+			langRgt, wordRgt = tmpRgt[0], tmpRgt[1].split("\n")[0]
 
-			#if(l.find("rel:has_derived_form") != -1) or (l.find("rel:etymological_origin_of") != -1):
+			try:
+				u = langs[langLft]
+			except KeyError:
+				langs[langLft] = langLft
+
+			try:
+				u = langs[langRgt]
+			except KeyError:
+				langs[langRgt] = langRgt
+
+			try:
+				u = words[wordLft]
+			except KeyError:
+				words[wordLft] = (i,1)
+
+			try:
+				u = words[wordRgt]
+			except KeyError:
+				words[wordRgt] = (i,2)
+
+			for k in range(len(loadStrs)):
+				if(loadStrsNums[k] > 10000):
+					th = myThread(k, loadStrs[k], Logic(True))
+					th.start()
+					threads.append(th)
+					loadStrs[k] = ""
+					loadStrsNums[k] = 0
+
+			#print("boop:", len(langs), len(words))
+			#print("beep:", languages.index(langLft), words[wordLft], languages.index(langRgt), words[wordRgt], rel)
+			langLftIdx = langs[langLft]
+			langRgtIdx = langs[langRgt]
+			if(rel == 'rel:derived'):
+				loadStrs[0] += "derived(langLftIdx, words[wordLft], langRgtIdx, words[wordRgt])\n"
+				loadStrsNums[0] += 1
+			elif(rel == 'rel:etymologically'):
+				loadStrs[1] += "etymologically(langLftIdx, words[wordLft], langRgtIdx, words[wordRgt])\n"
+				loadStrsNums[1] += 1
+			elif(rel == 'rel:etymologically_related'):
+				loadStrs[2] += "etymologically_related(langLftIdx, words[wordLft], langRgtIdx, words[wordRgt])\n"
+				loadStrsNums[2] += 1
+			elif(rel == 'rel:etymology'):
+				loadStrs[3] += "etymology(langLftIdx, words[wordLft], langRgtIdx, words[wordRgt])\n"
+				loadStrsNums[3] += 1
+			elif(rel == 'rel:has_derived_form'):
+				loadStrs[4] += "has_derived_form(langLftIdx, words[wordLft], langRgtIdx, words[wordRgt])\n"
+				loadStrsNums[4] += 1
+			elif(rel.find('rel:variant') > -1):
+				loadStrs[5] += "variant(langLftIdx, words[wordLft], langRgtIdx, words[wordRgt])\n"
+				loadStrsNums[5] += 1
+
+			##if(l.find("rel:has_derived_form") != -1) or (l.find("rel:etymological_origin_of") != -1):
 			#if(l.find("rel:etymology") == -1):
 			#	continue
 			#db.append(l)  #crearRelacion(l)
 			i += 1
-			if i%10000==0:
+			if i%100000==0:
+				print("beep:", langs[langLft], words[wordLft], langs[langRgt], words[wordRgt], rel, len(words), len(langs))
 				print(i)
 			#if i>300000:
 			#	break
-		print("dbSize:",i)
-		print(words["eng: chickenpox"])
-		while True:
-			pass
+		print("dbSize:",i, "lenWords:", len(words))
+		print("Now waiting to join:", time.strftime("%H:%M:%S"))
+		print()
+		for t in threads:
+			t.join()
+			print("joined a thread:",time.strftime("%H:%M:%S"))
+		print("Joined every thread:", time.strftime("%H:%M:%S"))
+		return words, langs
 
-loadDBRels()
+def cargarRelaciones(_derived, _etymologically, _etymologically_related, _etymology, _has_derived_form, _variant, etymological_origin_of, is_derived_from):
+	if (_derived):
+		esHijo(H, P) <= derived(IP, P, IH, H)
+	else:
+		pyEngine.retract(esHijo(H, P) <= derived(IP, P, IH, H))
+	if (_etymologically):
+		esHijo(H, P) <= etymologically(IP, P, IH, H)
+	else:
+		pyEngine.retract(esHijo(H, P) <= etymologically(IP, P, IH, H))
+	if (_etymologically_related):
+		esHijo(H, P) <= etymologically_related(IP, P, IH, H)
+	else:
+		pyEngine.retract(esHijo(H, P) <= etymologically_related(IP, P, IH, H))
+	if (_etymology):
+		esHijo(H, P) <= etymology(IP, P, IH, H)
+	else:
+		pyEngine.retract(esHijo(H, P) <= etymology(IP, P, IH, H))
+	if (_has_derived_form):
+		esHijo(H, P) <= has_derived_form(IP, P, IH, H)
+	else:
+		pyEngine.retract(esHijo(H, P) <= has_derived_form(IP, P, IH, H))
+	if (_variant):
+		esHijo(H, P) <= variant(IP, P, IH, H)
+	else:
+		pyEngine.retract(esHijo(H, P) <= variant(IP, P, IH, H))
+	if (etymological_origin_of):
+		esHijo(H, P) <= etymology(IH, H, IP, P)	#etymological_origin_of
+	else:
+		pyEngine.retract(esHijo(H, P) <= etymology(IH, H, IP, P))
+	if (is_derived_from):
+		esHijo(H, P) <= has_derived_form(IH, H, IP, P) #is_derived_from
+	else:
+		pyEngine.retract(esHijo(H, P) <= has_derived_form(IH, H, IP, P)) #is_derived_from
 
-def alimentarBD():
-	assert_fact('padre', 'A','B')
-	assert_fact('padre', 'A','F')
-	assert_fact('padre', 'A','X')
-	assert_fact('padre', 'A','Z')
-	assert_fact('padre', 'B','D')
-	assert_fact('padre', 'B','C')
-	assert_fact('padre', 'F','G')
-	assert_fact('padre', 'C','P')
-	assert_fact('padre', 'O','D')
-
-	assert_fact('parent', 'mike','bob')
-	assert_fact('parent', 'mike2','bob')
-	assert_fact('parent', 'brian','mike')
-	assert_fact('parent', 'luke','mike')
-	assert_fact('parent', 'john','mike')
-	assert_fact('parent', 'tom','brian')
-	assert_fact('parent', 'marty','tom')
-	assert_fact('parent', 'bill','john')
-	assert_fact('parent', 'brian2','mike2')
-	assert_fact('parent', 'luke2','mike2')
-	assert_fact('parent', 'john2','mike2')
-	assert_fact('parent', 'tom2','brian2')
-	assert_fact('parent', 'bill2','john2')
-	assert_fact('parent', 'mike3','bob3')
-	assert_fact('parent', 'roy3','bob3')
-	# bob
-	#  -mike
-	#    -brian
-	#      -tom
-	#        -marty
-	#    -luke
-	#    -john
-	#      -bill
-	#  -mike2
-	#    -brian2
-	#      -tom2
-	#    -luke2
-	#    -john2
-	#      -bill2
-	#
-	# bob3
-	#   -mike3
-	#   -roy3
-	load("""
-		brother(X,Y) <= parent(X,Z) & parent(Y,Z) & (X!=Y)
-		uncle(X,Y) <= parent(Y,Z) & brother(X,Z)
-		ancestor(X,Y) <= parent(X,Y)
-		ancestor(X,Y) <= parent(X,Z) & ancestor(Z,Y)
-		cousin(X,Y) <= parent(X,Z) & parent(Y,W) & brother(Z,W)
-		cousin2(X,Y) <= cousin(X,W) & parent(Y,W)
-		start(X,Y) <= (Y==X[0:2])
-		related(X,Y) <= ancestor(X,P) & ancestor(Y,Q) & (P==Q)
-
-		parentRel(X,Y) <= etymology(X,Y)
-		parentRel(X,Y) <= etymology(X,Z) & parentRel(Z,Y)
-
-		""")
-		#parentRel(X,Y) <= is_derived_from(X,Y)
-		#parentRel(X,Y) <= is_derived_from(X,Z) & parentRel(Z,Y)
-	# el start muestra cómo editar la salida o comparación.
-	# por ejemplo cuando agreguemos 'eng: doubt', podríamos comparar los idiomas con este método con Y==[:5]
-
-	# el related está más o menos. inestable, tal vez
 
 def main():
-	alimentarBD()
-	esHijo("B","D")
-	esHijo2("B","D")
-	esHermano("B", "C")
-	esTio("F","C")
-	esPrimo("G","D")
 
-	print('parent bill:',ask('parent(bill,X)'))
-	print('ancestor bill:',ask('ancestor(bill,X)')) # john, mike, bob
-	print('uncle brian:',ask('uncle(brian,X)'))  # bill
-	print('brother john:',ask('brother(john,X)'))  # luke, brian
-	print('cousin bill:',ask('cousin(bill,X)'))  # tom
-	print('cousin luke:',ask('cousin(luke,X)'))  # luke2, brian2, john2
-	print('cousin2 luke:',ask('cousin2(luke,X)'))  # bill2, tom2
-	print('cousin2 bill:',ask('cousin2(bill,X)'))  # marty
-	print('start:',ask('start(bill,X)'))
-	print('related:',ask('related(bill,X)'))
-	print('related:',ask('related(mike3,X)'))
-	esHermanoNew('bill','john')
-	esHermanoNew('luke','john')
-	print('related:',ask('parentRel(Japan,X)'))
+	esHijo(H, P, True) <= esHijo(H, P)
+	esHijo(H, P, False) <= ~esHijo(H, P)
+
+	sonHermanos(A, B, True) <= sonHermanos(A, B)
+	sonHermanos(A, B, False) <= ~sonHermanos(A, B)
+	sonHermanos(A, B) <= esHijo(A, P1) & esHijo (B, P2) & (P1 == P2) & (A!=B)
+
+	esTio(T, S , True) <= esTio(T, S)
+	esTio(T, S, False) <= ~esTio(T, S)
+	esTio(T, S) <= esHijo(S, P) & sonHermanos(T, P) & (P!=T)
+
+	sonPrimos(P1, P2, G, True) <= sonPrimos(P1, P2, G )
+	sonPrimos(P1, P2, 0, False) <= ~sonPrimos(P1, P2, G)
+	sonPrimos(P1, P2, G) <= esHijo(P1, PP1) & esHijo(P2, PP2) & sonHermanos(PP1, PP2) & (G==1)
+	sonPrimos(P1, P2, G) <= esHijo(P1, PP1) & esHijo(P2, PP2) & ~sonHermanos(PP1, PP2) & sonPrimos(PP1, PP2, G1) & (G==G1+1)
+
+	cargarRelaciones(True, True, True, True, True, True, False, True)
+	words, languages = loadDBRels()
+	print(list(words)[:10])
+	c = 0
+	while True:
+		print(words['Kokosnuss'], words['Nuss'])
+		quest = 'esHijo('+str(words['Nuss'])+','+str(words['Kokosnuss'])+',R)'
+		print(quest)
+		print(c,":",ask(quest))
+		quest2 = 'esHijo('+str(words['Kokosnuss'])+','+str(words['Nuss'])+',R)'
+		print(quest2)
+		print(c,":",ask(quest2))
+		c += 1
+		time.sleep(10)
 
 main()
-
-#definicion lógica externa
-algo(X,Y) <= (Y=="Beep")
-print(algo("doot",X))
