@@ -4,7 +4,7 @@ import threading
 import logging
 from pyDatalog import pyEngine, Logic
 from pyDatalog.pyDatalog import assert_fact, load, create_terms, ask
-create_terms('derived, etymologically, etymologically_related, etymology, has_derived_form, variant, esHijo, sonHermanos, esTio, sonPrimos, A, B, P1,P2, T, S, PP1, PP2, G1,G,esHijo, etymology,etymological_origin_of,has_derived_form,is_derived_from, H, P, IH,IP,R')
+create_terms('derived, etymologically, etymologically_related, etymology, has_derived_form, variant, esHijo, sonHermanos, esTio, sonPrimos, A, B, P1,P2, T, S, PP1, PP2, G1,G,esHijo, etymology,etymological_origin_of,is_derived_from, H, P, IH,IP,R')
 
 pyEngine.Logging = True
 logging.basicConfig(level=logging.INFO)
@@ -67,10 +67,10 @@ class myThread (threading.Thread):
 		self.loadStr = loadStr
 		self.logic = logic
 	def run(self):
-		threadLock.acquire()
+		#threadLock.acquire()
 		Logic(self.logic)
 		loadBigString(self.loadStr, self.threadID)
-		threadLock.release()
+		#threadLock.release()
 
 def loadBigString(string,cnt):
 	try:
@@ -94,6 +94,7 @@ def loadDBRels():
 	loadStrsNums = [0,0,0,0,0,0]
 	numWords = 0
 	threads = []
+	saved = 0
 	#with open("../etymwn/etymwn.tsv") as f:
 	with open("../etymwn/summaryDB.tsv") as f:
 		i = 0
@@ -123,19 +124,26 @@ def loadDBRels():
 
 			try:
 				u = words[wordLft]
+				saved += 1
 			except KeyError:
 				words[wordLft] = (i,1)
 
 			try:
 				u = words[wordRgt]
+				saved += 1
 			except KeyError:
 				words[wordRgt] = (i,2)
 
+			if(wordRgt == 'anchor' or wordLft == 'anchor'):
+				print(rel, "(", wordLft, ",", wordRgt, ")")
+
 			for k in range(len(loadStrs)):
-				if(loadStrsNums[k] > 10000):
+				if(loadStrsNums[k] > 15000):
 					th = myThread(k, loadStrs[k], Logic(True))
 					th.start()
 					threads.append(th)
+					print(len(loadStrs[k].split("\n")),"remaining of", loadStrs[k].split("(")[0])
+					#load(loadStrs[k])
 					loadStrs[k] = ""
 					loadStrsNums[k] = 0
 
@@ -144,23 +152,29 @@ def loadDBRels():
 			langLftIdx = langs[langLft]
 			langRgtIdx = langs[langRgt]
 			if(rel == 'rel:derived'):
-				loadStrs[0] += "derived(langLftIdx, words[wordLft], langRgtIdx, words[wordRgt])\n"
-				loadStrsNums[0] += 1
+				#loadStrs[0] += "derived("+str(langLftIdx)+", "+str(words[wordLft])+", "+str(langRgtIdx)+", "+str(words[wordRgt])+")\n"
+				#loadStrsNums[0] += 1
+				+ derived(str(langLftIdx), words[wordLft], str(langRgtIdx), str(words[wordRgt]))
 			elif(rel == 'rel:etymologically'):
-				loadStrs[1] += "etymologically(langLftIdx, words[wordLft], langRgtIdx, words[wordRgt])\n"
-				loadStrsNums[1] += 1
+				#loadStrs[1] += "etymologically("+str(langLftIdx)+", "+str(words[wordLft])+", "+str(langRgtIdx)+", "+str(words[wordRgt])+")\n"
+				#loadStrsNums[1] += 1
+				+ etymologically(str(langLftIdx), words[wordLft], str(langRgtIdx), str(words[wordRgt]))
 			elif(rel == 'rel:etymologically_related'):
-				loadStrs[2] += "etymologically_related(langLftIdx, words[wordLft], langRgtIdx, words[wordRgt])\n"
-				loadStrsNums[2] += 1
+				#loadStrs[2] += "etymologically_related("+str(langLftIdx)+", "+str(words[wordLft])+", "+str(langRgtIdx)+", "+str(words[wordRgt])+")\n"
+				#loadStrsNums[2] += 1
+				+ etymologically_related(str(langLftIdx), words[wordLft], str(langRgtIdx), str(words[wordRgt]))
 			elif(rel == 'rel:etymology'):
-				loadStrs[3] += "etymology(langLftIdx, words[wordLft], langRgtIdx, words[wordRgt])\n"
-				loadStrsNums[3] += 1
+				#loadStrs[3] += "etymology("+str(langLftIdx)+", "+str(words[wordLft])+", "+str(langRgtIdx)+", "+str(words[wordRgt])+")\n"
+				#loadStrsNums[3] += 1
+				+ etymology(str(langLftIdx), words[wordLft], str(langRgtIdx), str(words[wordRgt]))
 			elif(rel == 'rel:has_derived_form'):
-				loadStrs[4] += "has_derived_form(langLftIdx, words[wordLft], langRgtIdx, words[wordRgt])\n"
-				loadStrsNums[4] += 1
+				#loadStrs[4] += "has_derived_form("+str(langLftIdx)+", "+str(words[wordLft])+", "+str(langRgtIdx)+", "+str(words[wordRgt])+")\n"
+				#loadStrsNums[4] += 1
+				+ has_derived_form(str(langLftIdx), words[wordLft], str(langRgtIdx), str(words[wordRgt]))
 			elif(rel.find('rel:variant') > -1):
-				loadStrs[5] += "variant(langLftIdx, words[wordLft], langRgtIdx, words[wordRgt])\n"
-				loadStrsNums[5] += 1
+				#loadStrs[5] += "variant("+str(langLftIdx)+", "+str(words[wordLft])+", "+str(langRgtIdx)+", "+str(words[wordRgt])+")\n"
+				#loadStrsNums[5] += 1
+				+ variant(str(langLftIdx), words[wordLft], str(langRgtIdx), str(words[wordRgt]))
 
 			##if(l.find("rel:has_derived_form") != -1) or (l.find("rel:etymological_origin_of") != -1):
 			#if(l.find("rel:etymology") == -1):
@@ -172,7 +186,12 @@ def loadDBRels():
 				print(i)
 			#if i>300000:
 			#	break
-		print("dbSize:",i, "lenWords:", len(words))
+		for k in range(len(loadStrs)):
+			load(loadStrs[k])
+			print(len(loadStrs[k].split("\n")),"remaining of", loadStrs[k].split("(")[0])
+			loadStrs[k] = ""
+			loadStrsNums[k] = 0
+		print("dbSize:",i, "lenWords:", len(words), "saved:", saved)
 		print("Now waiting to join:", time.strftime("%H:%M:%S"))
 		print()
 		for t in threads:
@@ -234,18 +253,24 @@ def main():
 	sonPrimos(P1, P2, G) <= esHijo(P1, PP1) & esHijo(P2, PP2) & sonHermanos(PP1, PP2) & (G==1)
 	sonPrimos(P1, P2, G) <= esHijo(P1, PP1) & esHijo(P2, PP2) & ~sonHermanos(PP1, PP2) & sonPrimos(PP1, PP2, G1) & (G==G1+1)
 
-	cargarRelaciones(True, True, True, True, True, True, False, True)
 	words, languages = loadDBRels()
-	print(list(words)[:10])
+	cargarRelaciones(True, True, True, True, True, True, True, True)
+	lis = list(words)[2000:2020]
+	print(len(lis))
+	print("{")
+	for j in range(len(lis)):
+		print("    '"+str(lis[j])+"': "+str(words[lis[j]])+",")
+	print("}")
 	c = 0
 	while True:
-		print(words['Kokosnuss'], words['Nuss'])
-		quest = 'esHijo('+str(words['Nuss'])+','+str(words['Kokosnuss'])+',R)'
-		print(quest)
-		print(c,":",ask(quest))
-		quest2 = 'esHijo('+str(words['Kokosnuss'])+','+str(words['Nuss'])+',R)'
+		print(words[lis[2]], words[lis[3]])
+		quest2 = 'esHijo('+str(words[lis[2]])+','+str(words[lis[3]])+',R)'
 		print(quest2)
 		print(c,":",ask(quest2))
+		print(words[lis[3]], words[lis[2]])
+		quest = 'esHijo('+str(words[lis[3]])+','+str(words[lis[2]])+',R)'
+		print(quest)
+		print(c,":",ask(quest))
 		c += 1
 		time.sleep(10)
 
