@@ -191,7 +191,7 @@ def loadDBRels():
 	threads = []
 	saved = 0
 	#with open("../etymwn/etymwn.tsv") as f:
-	with open("../etymwn/summaryDB.tsv") as f:
+	with open("../etymwn/summaryDB.tsv", encoding="utf8") as f:
 		i = 0
 		for l in f:
 			tmp = l.split("\t")
