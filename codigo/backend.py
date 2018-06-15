@@ -215,13 +215,8 @@ def loadDBRels():
 	numWords = 0
 	threads = []
 	saved = 0
-<<<<<<< HEAD
 	global DATABASE
-	with open(DATABASE) as f:
-=======
-	#with open("../etymwn/etymwn.tsv") as f:
-	with open("../etymwn/summaryDB.tsv", encoding="utf8") as f:
->>>>>>> 3402a1d0dd0dcb4e03a077023105691f3cc7cfe6
+	with open(DATABASE, encoding="utf8") as f:
 		i = 0
 		for l in f:
 			tmp = l.split("\t")
