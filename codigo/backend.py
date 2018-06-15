@@ -91,7 +91,7 @@ hijosIdioma(P, IH, R) <= getHijosI(P, H, IH) & hijosIdioma(H, IH, R)
 
 #------- Palabras comunes dos idiomas
 #----Determinar si una palabra está relacionada con un idioma
-_estaRelacionada(P, IH, R) <= _antepasados(P, I,R) & (I==IH)
+_estaRelacionada(P, IH, R) <= _antepasados(P, IH, R) #& (I==IH)
 _estaRelacionada(P, IH, True) <= _estaRelacionada(P, IH, R)
 _estaRelacionada(P, IH, False) <= ~_estaRelacionada(P, IH, R)
 
@@ -99,10 +99,10 @@ _estaRelacionada(P, IH, False) <= ~_estaRelacionada(P, IH, R)
 create_terms('getPalabrasXidioma, palabrasComunes, I1, I2')
 getPalabrasXidioma(I, R) <= esHijo(IP, P, I, R)
 getPalabrasXidioma(I, R) <= esHijo(I, R, IH, H)
-palabrasComunes(I1, I2, R1) <= getPalabrasXidioma(I1, R1) & getPalabrasXidioma(I2, R2) & (R1==R2)
+palabrasComunes(I1, I2, R1) <= getPalabrasXidioma(I1, R1) & getPalabrasXidioma(I2, R1) #& (R1==R2)
 
 #-----------Número de palabras comunes entre dos idiomas
-contarPalabrasComunes(I1, I2, R1) <= getPalabrasXidioma(I1, R1) & getPalabrasXidioma(I2, R2) & (R1==R2)
+contarPalabrasComunes(I1, I2, R1) <= getPalabrasXidioma(I1, R1) & getPalabrasXidioma(I2, R1) # & (R1==R2)
 
 
 def readFileWord(respuesta):
@@ -187,7 +187,7 @@ def __idiomasRelacionadosPalabra(_palabra):
 
 def __listarPalabrasComunesIdiomas(_idiomaA, _idiomaB):
 	# Listar todas las palabras comunes entre dos idiomas
-	consulta = ask('contarPalabrasComunes('+_idiomaA+', '+_idiomaB+', R1)')
+	consulta = ask('palabrasComunes('+_idiomaA+', '+_idiomaB+', R1)')
 	if (consulta):
 		words = []
 		for r in consulta.answers:
@@ -196,12 +196,11 @@ def __listarPalabrasComunesIdiomas(_idiomaA, _idiomaB):
 	else:
 		return "No hubo coincidencia."
 
-
 def __numeroPalabrasComunesIdiomas(_idiomaA, _idiomaB):
 	# Contar todas las palabras comunes entre dos idiomas
 	consulta = ask('contarPalabrasComunes('+_idiomaA+', '+_idiomaB+', R1)')
 	if (consulta):
-		return _len(consulta.answers)
+		return consulta.answers[0][0][0]
 	else:
 		return 0
 
@@ -216,7 +215,7 @@ def loadDBRels():
 	threads = []
 	saved = 0
 	global DATABASE
-	with open(DATABASE, encoding="utf8") as f:
+	with open(DATABASE) as f:
 		i = 0
 		for l in f:
 			tmp = l.split("\t")
@@ -358,8 +357,8 @@ def main():
 		print("Listar palabras comunes dos idiomas: ", __listarPalabrasComunesIdiomas("eng", "lat"))
 		print("Listar palabras comunes dos idiomas: ", __listarPalabrasComunesIdiomas("afr", "lat"))
 
-		print("Contar palabras comunes dos idiomas: ", __numeroPalabrasComunesIdiomas("nada", "aaa"))
-		print("Contar palabras comunes dos idiomas: ", __numeroPalabrasComunesIdiomas("alejandra", "asdrf"))
+		print("Contar palabras comunes dos idiomas: ", __numeroPalabrasComunesIdiomas("ita", "fra"))
+		print("Contar palabras comunes dos idiomas: ", __numeroPalabrasComunesIdiomas("lat", "nlb"))
 		break
 		time.sleep(10)
 
