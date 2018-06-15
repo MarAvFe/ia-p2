@@ -10,11 +10,10 @@ create_terms('I,getHijos2, descendientes,gradoPrimos, sonPrimas, lIdiomasRpalabr
 create_terms('getHijos2,resultado,_estaRelacionada, _soloIdiomas,getIdiomas, H1, getHijos2,R_IP, R_P,R_IH, R_H, R2, descendientes,getPadres2, ascendencia,_antepasados,A,B,C,D,E,F,GR1,R1, R2,R3')
 create_terms('contarPalabrasComunes, C1')
 create_terms("lPalabrasIdiomaOriginadas, getHijosIdioma,Palabra ,Idioma,Hijos, getHijosI, hijosIdioma, getPrimas, X, Y ")
-create_terms('getPalabrasXidioma, palabrasComunes, I1, I2, IA, IB, IP1, IP2, IPP1, IPP2, IT, IS, sonElMismo')
+create_terms('getPalabrasXidioma, palabrasComunes, I1, I2, IA, IB, IP1, IP2, IPP1, IPP2, IT, IS, sonElMismo, O')
 
 #pyEngine.Logging = True
 #logging.basicConfig(level=logging.INFO)
-datos =[["senabe", "sannup"], ["waniigan","wangan"], ["waniigan","wannigan"]]
 
 class myThread (threading.Thread):
 	def __init__(self, threadID, loadStr, logic):
@@ -37,10 +36,10 @@ def loadBigString(string,cnt):
 esHijo(H, P) <= esHijo(IP, P, IH, H)
 esHijo(IH, H, IP, P, R) <= esHijo(IP, P, IH, H)
 
-sonElMismo(IA, A, IB, B) <= (IA == IB) & (A == B)
+sonElMismo(IA, A, IB, B, R) <= (IA == IB) & (A == B)
 
 # ----- Determinar si dos palabras son heman@s
-sonHermanos(IA, A, IB, B, R) <= esHijo(IA, A, IP, P) & esHijo (IB, B, IP, P) & ~sonElMismo(IA, A, IB, B)
+sonHermanos(IA, A, IB, B, R) <= esHijo(IA, A, IP, P) & esHijo (IB, B, IP, P) & (A!=B)#& ~sonElMismo(IA, A, IB, B, O)
 #sonHermanos(IA, A, IB, B, R) <= esHijo(IA, A, IP, P) & esHijo (IB, B, IP, P) & (A!=B)
 sonHermanos(IA, A, IB, B) <= sonHermanos(IA, A, IB, B, R)
 
@@ -232,8 +231,8 @@ def loadDBRels():
 			#print("boop:", len(langs), len(words))
 			langLftIdx = langs[langLft]
 			langRgtIdx = langs[langRgt]
-			if wordLft == 'beest' or wordRgt == 'beest' or wordLft == 'apartheid' or wordRgt == 'apartheid':
-				print("beep:", (str(langLftIdx), hash(words[wordLft]), str(langRgtIdx), hash(words[wordRgt])), rel)
+			#if wordLft == 'beest' or wordRgt == 'beest' or wordLft == 'apartheid' or wordRgt == 'apartheid':
+			#	print("beep:", (str(langLftIdx), hash(words[wordLft]), str(langRgtIdx), hash(words[wordRgt])), rel)
 			if(rel == 'rel:derived'):
 				+ derived(str(langLftIdx), hash(words[wordLft]), str(langRgtIdx), hash(words[wordRgt]))
 			elif(rel == 'rel:etymologically'):
@@ -246,6 +245,8 @@ def loadDBRels():
 				+ etymology(str(langRgtIdx), hash(words[wordRgt]), str(langLftIdx), hash(words[wordLft]))
 			elif(rel == 'rel:has_derived_form'):
 				+ has_derived_form(str(langLftIdx), hash(words[wordLft]), str(langRgtIdx), hash(words[wordRgt]))
+			elif(rel == 'rel:is_derived_from'):
+				+ has_derived_form(str(langRgtIdx), hash(words[wordRgt]), str(langLftIdx), hash(words[wordLft]))
 			elif(rel.find('rel:variant') > -1):
 				+ variant(str(langLftIdx), hash(words[wordLft]), str(langRgtIdx), hash(words[wordRgt]))
 
@@ -308,10 +309,12 @@ def main():
 
 		print("Prueba función son primas: ", __sonPrimas('eng', aviation, 'lat', aviarium)) #true
 		print("Prueba función son primas: ", __sonPrimas('fra', aviation, 'lat', aviarium)) #false
+		print("Prueba función son primas: ", __sonPrimas('lat', aviarium, 'lat', aviarius)) #false
+		print("Prueba función son primas: ", __sonPrimas('lat', aviarium, 'afr', apartheid)) #false
 
-		#print("Prueba función son tios: ", esTio('eng', aviation, 'lat', aviarius))
-		#print("Prueba función son tios: ", esTio('lat', aviarius, 'eng', aviation))
-		#print("Prueba función son tios: ", esTio('fra', aviation, 'lat', aviarium))
+		print("Prueba función son tios: ", __esTia('lat', aviarius, 'eng', aviation))# true
+		print("Prueba función son tios: ", __esTia('fra', aviation, 'lat', aviarium))# true
+		print("Prueba función son tios: ", __esTia('eng', aviation, 'lat', aviarius))# false
 
 		time.sleep(10)
 
