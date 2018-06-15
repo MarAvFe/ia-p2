@@ -10,56 +10,6 @@ pyEngine.Logging = True
 logging.basicConfig(level=logging.INFO)
 datos =[["senabe", "sannup"], ["waniigan","wangan"], ["waniigan","wannigan"]]
 
-# -- Operaciones entre palabra e idioma
-def estaRelacionadaIdioma(palabra, idioma):
-	# Sí o no
-	pass
-
-def palabrasOriginadas(palabra, idioma):
-	# devolver lista de palabras
-	#recursiva.
-	#1º Buscar todas las hijas de esa palabra, según idioma.
-	#Las hijas pasan a ser padres y pasa a buscar a sus hijas (siempre usando el filtro del idioma)
-	#load("""
-	#	(factorial[N] == F) <= (N < 2) & (F==1)
-	#	(factorial[N] == F) <= (N > 1) & (N1 == N-1) & (F == N*factorial[N1])
-	#""")
-	#print(ask('factorial[3]==N')) # prints a set with one element: (3,6)
-	pass
-
-def listarIdiomasRelacionados(palabra):
-	pass
-
-# -- Comparación idiomas
-
-def contarPalabrasComunes(idiomaA, idiomaB):
-	# Contar todas las palabras comunes entre dos idiomas
-	pass
-
-def listarPalabrasComunes (idiomaA, idiomaB):
-	# Listar todas las palabras comunes entre dos idiomas
-	pass
-
-def idiomaMasAporto (idiomaA, idiomaB):
-	# Idioma que más aportó a otro
-	pass
-
-def listaIdiomasAportaron (idioma):
-	# LIstar todos los idiomas que aportaron a otro.
-	#Similar al anterior pero debe incluir porcentaje para todos los idiomas
-	pass
-
-
-
-def crearRelacion(linea):
-	# swe: bio-	rel:etymological_origin_of	swe: biologi
-	tmp = linea.split("\t")  # ["swe: bio-","rel:etymological_origin_of","swe: biologi"]
-	izq = tmp[0]  # swe: bio-
-	rel = tmp[1].split(":")[1]  # rel:etymological_origin_of
-	der = tmp[2].split("\n")[0]  # swe: biologi
-	assert_fact(rel, izq, der)
-
-
 class myThread (threading.Thread):
 	def __init__(self, threadID, loadStr, logic):
 		threading.Thread.__init__(self)
@@ -134,8 +84,6 @@ def loadDBRels():
 			except KeyError:
 				words[wordRgt] = (i,2)
 
-			if(wordRgt == 'anchor' or wordLft == 'anchor'):
-				print(rel, "(", wordLft, ",", wordRgt, ")")
 
 			for k in range(len(loadStrs)):
 				if(loadStrsNums[k] > 15000):
@@ -147,6 +95,8 @@ def loadDBRels():
 					loadStrs[k] = ""
 					loadStrsNums[k] = 0
 
+			if(wordRgt == 'anchor' or wordLft == 'anchor'):
+				print(rel, "(", wordLft, ",", wordRgt, ")")
 			#print("boop:", len(langs), len(words))
 			#print("beep:", languages.index(langLft), words[wordLft], languages.index(langRgt), words[wordRgt], rel)
 			langLftIdx = langs[langLft]
@@ -154,32 +104,28 @@ def loadDBRels():
 			if(rel == 'rel:derived'):
 				#loadStrs[0] += "derived("+str(langLftIdx)+", "+str(words[wordLft])+", "+str(langRgtIdx)+", "+str(words[wordRgt])+")\n"
 				#loadStrsNums[0] += 1
-				+ derived(str(langLftIdx), words[wordLft], str(langRgtIdx), str(words[wordRgt]))
+				+ derived(str(langLftIdx), str(words[wordLft]), str(langRgtIdx), str(words[wordRgt]))
 			elif(rel == 'rel:etymologically'):
 				#loadStrs[1] += "etymologically("+str(langLftIdx)+", "+str(words[wordLft])+", "+str(langRgtIdx)+", "+str(words[wordRgt])+")\n"
 				#loadStrsNums[1] += 1
-				+ etymologically(str(langLftIdx), words[wordLft], str(langRgtIdx), str(words[wordRgt]))
+				+ etymologically(str(langLftIdx), str(words[wordLft]), str(langRgtIdx), str(words[wordRgt]))
 			elif(rel == 'rel:etymologically_related'):
 				#loadStrs[2] += "etymologically_related("+str(langLftIdx)+", "+str(words[wordLft])+", "+str(langRgtIdx)+", "+str(words[wordRgt])+")\n"
 				#loadStrsNums[2] += 1
-				+ etymologically_related(str(langLftIdx), words[wordLft], str(langRgtIdx), str(words[wordRgt]))
+				+ etymologically_related(str(langLftIdx), str(words[wordLft]), str(langRgtIdx), str(words[wordRgt]))
 			elif(rel == 'rel:etymology'):
 				#loadStrs[3] += "etymology("+str(langLftIdx)+", "+str(words[wordLft])+", "+str(langRgtIdx)+", "+str(words[wordRgt])+")\n"
 				#loadStrsNums[3] += 1
-				+ etymology(str(langLftIdx), words[wordLft], str(langRgtIdx), str(words[wordRgt]))
+				+ etymology(str(langLftIdx), str(words[wordLft]), str(langRgtIdx), str(words[wordRgt]))
 			elif(rel == 'rel:has_derived_form'):
 				#loadStrs[4] += "has_derived_form("+str(langLftIdx)+", "+str(words[wordLft])+", "+str(langRgtIdx)+", "+str(words[wordRgt])+")\n"
 				#loadStrsNums[4] += 1
-				+ has_derived_form(str(langLftIdx), words[wordLft], str(langRgtIdx), str(words[wordRgt]))
+				+ has_derived_form(str(langLftIdx), str(words[wordLft]), str(langRgtIdx), str(words[wordRgt]))
 			elif(rel.find('rel:variant') > -1):
 				#loadStrs[5] += "variant("+str(langLftIdx)+", "+str(words[wordLft])+", "+str(langRgtIdx)+", "+str(words[wordRgt])+")\n"
 				#loadStrsNums[5] += 1
-				+ variant(str(langLftIdx), words[wordLft], str(langRgtIdx), str(words[wordRgt]))
+				+ variant(str(langLftIdx), str(words[wordLft]), str(langRgtIdx), str(words[wordRgt]))
 
-			##if(l.find("rel:has_derived_form") != -1) or (l.find("rel:etymological_origin_of") != -1):
-			#if(l.find("rel:etymology") == -1):
-			#	continue
-			#db.append(l)  #crearRelacion(l)
 			i += 1
 			if i%100000==0:
 				print("beep:", langs[langLft], words[wordLft], langs[langRgt], words[wordRgt], rel, len(words), len(langs))
@@ -263,7 +209,7 @@ def main():
 	print("}")
 	c = 0
 	while True:
-		print(words[lis[2]], words[lis[3]])
+		print(words[lis[2]], words[lis[3]],lis[2], lis[3])
 		quest2 = 'esHijo('+str(words[lis[2]])+','+str(words[lis[3]])+',R)'
 		print(quest2)
 		print(c,":",ask(quest2))

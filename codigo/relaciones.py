@@ -33,7 +33,6 @@ create_terms('contarPalabrasComunes, C1')
 + variant("c", "helena","b", "marta")
 + variant("nada", "luis","nada", "catalina")
 
-
 esHijo(IP, P, IH, H) <= derived(IP, P, IH, H)
 esHijo(IP, P, IH, H) <= etymologically(IP, P, IH, H)
 esHijo(IP, P, IH, H) <= etymologically_related(IP, P, IH, H)
@@ -48,14 +47,14 @@ esHijo(H, P) <= esHijo(IP, P, IH, H)
 esHijo(H, P, R) <= esHijo(A, P, B, H)
 
 # ----- Determinar si dos palabras son heman@s
-sonHermanos(A, B, R) <= esHijo(A, P1) & esHijo (B, P2) & (P1 == P2) & (A!=B)
+sonHermanos(A, B, R) <= esHijo(A, P) & esHijo (B, P) & (A!=B)
 sonHermanos(A, B) <= sonHermanos(A, B, R)
 
 #------ Determinar si dos palabras son prim@s y también se obtiene el grado
 sonPrimos(P1, P2, G, True) <= sonPrimos(P1, P2, G )
 sonPrimos(P1, P2, 0, False) <= ~sonPrimos(P1, P2, G)
 sonPrimos(P1, P2, G) <= esHijo(P1, PP1) & esHijo(P2, PP2) & sonHermanos(PP1, PP2) & (G==1)
-sonPrimos(P1, P2, G) <= esHijo(P1, PP1) & esHijo(P2, PP2) & ~sonHermanos(PP1, PP2) & sonPrimos(PP1, PP2, G1) & (G==G1+1) 
+sonPrimos(P1, P2, G) <= esHijo(P1, PP1) & esHijo(P2, PP2) & ~sonHermanos(PP1, PP2) & sonPrimos(PP1, PP2, G1) & (G==G1+1)
 sonPrimas(P1, P2) <= sonPrimos(P1, P2, G)
 
 #------- Determina si dos palabras son primas, y el grado
@@ -80,11 +79,11 @@ getIdiomas(P,IP, IP) <= esHijo(IP, P, IH, H)
 getIdiomas(H,IH, IP) <= esHijo(IP, P, IH, H)
 
 _antepasados(H, I, R) <= ascendencia(H, I, R)
-_antepasados(P, I, R) <= descendientes(P, I, R) 
-_antepasados(P, I, R) <= getIdiomas(P,I, R) 
+_antepasados(P, I, R) <= descendientes(P, I, R)
+_antepasados(P, I, R) <= getIdiomas(P,I, R)
 
 #---- Listar los idiomas relacionados con una palabra
-_soloIdiomas(P, I)<=_antepasados(P, I, R) 
+_soloIdiomas(P, I)<=_antepasados(P, I, R)
 
 
 #------- Obtener el conjunto de todas las palabras en un idioma originadas por una palabra
@@ -196,9 +195,9 @@ def __listarIdiomasAportaronOtro():
 def main():
 	print("Prueba función son hermanos: ", __sonHermanos("catalina", "margarita"))
 	print("Prueba función son hermanos: ", __sonHermanos("saul", "margarita"))
-	print("Prueba función son PRIMOS: ", __sonPrimas("catalina", "ericka"))
-	print("Prueba función son PRIMOS: ", __sonPrimas("saul", "margarita"))
-	print("Prueba función son PRIMOS: ", __sonPrimas("alejandra", "maria"))
+	print("Prueba función son PRIMOS: ", __sonPrimas("catalina", "ericka")) #True
+	print("Prueba función son PRIMOS: ", __sonPrimas("saul", "margarita")) #True
+	print("Prueba función son PRIMOS: ", __sonPrimas("alejandra", "maria")) #False
 	print("Prueba función son PRIMOS: ", __gradoPrimas("catalina", "ericka"))
 	print("Prueba función son PRIMOS: ", __gradoPrimas("saul", "margarita"))
 	print("Prueba función son PRIMOS: ", __gradoPrimas("alejandra", "maria"))
@@ -215,13 +214,8 @@ def main():
 	print("Listar palabras comunes dos idiomas: ", __listarPalabrasComunesIdiomas("nada", "aaa"))
 	print("Listar palabras comunes dos idiomas: ", __listarPalabrasComunesIdiomas("alejandra", "asdrf"))
 	print("Contar palabras comunes dos idiomas: ", __numeroPalabrasComunesIdiomas("nada", "aaa"))
-	print("Contar palabras comunes dos idiomas: ", __numeroPalabrasComunesIdiomas("alejandra", "asdrf"))	
+	print("Contar palabras comunes dos idiomas: ", __numeroPalabrasComunesIdiomas("alejandra", "asdrf"))
+	print("primas de alejandra: ", ask('sonPrimas("alejandra",Y)'))
+	print("primas de catalina: ", ask('sonPrimas("catalina",Y)'))
 
-	
-main()		
-
-
-	
-
-
-
+main()
