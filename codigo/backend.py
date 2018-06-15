@@ -302,20 +302,42 @@ def main():
 		aviation = str(hash(words['aviation']))
 		aviarius = str(hash(words['aviarius']))
 		aviarium = str(hash(words['aviarium']))
-		print("Prueba función son hermanas: ", __sonHermanos('fra', apartheid, 'ita', apartheid)) #true
-		print("Prueba función son hermanas: ", __sonHermanos('fra', apartheid, 'afr', apartheid)) #false
-		print("Prueba función son hermanas: ", __sonHermanos('afr', apartheid, 'afr', apartheid)) #false
-		print("Prueba función son hermanas: ", __sonHermanos('fra', aviation, 'lat', aviarius)) #true
+		avis = str(hash(words['avis']))
+		print("Prueba función son hermanas: ", __sonHermanos('fra', apartheid, 'ita', apartheid))  # true
+		print("Prueba función son hermanas: ", __sonHermanos('fra', apartheid, 'afr', apartheid))  # false
+		print("Prueba función son hermanas: ", __sonHermanos('afr', apartheid, 'afr', apartheid))  # false
+		print("Prueba función son hermanas: ", __sonHermanos('fra', aviation, 'lat', aviarius))  # true
 
-		print("Prueba función son primas: ", __sonPrimas('eng', aviation, 'lat', aviarium)) #true
-		print("Prueba función son primas: ", __sonPrimas('fra', aviation, 'lat', aviarium)) #false
-		print("Prueba función son primas: ", __sonPrimas('lat', aviarium, 'lat', aviarius)) #false
-		print("Prueba función son primas: ", __sonPrimas('lat', aviarium, 'afr', apartheid)) #false
+		print("Prueba función son primas: ", __sonPrimas('eng', aviation, 'lat', aviarium))  # true
+		print("Prueba función son primas: ", __sonPrimas('fra', aviation, 'lat', aviarium))  # false
+		print("Prueba función son primas: ", __sonPrimas('lat', aviarium, 'lat', aviarius))  # false
+		print("Prueba función son primas: ", __sonPrimas('lat', aviarium, 'afr', apartheid)) # false
 
-		print("Prueba función son tios: ", __esTia('lat', aviarius, 'eng', aviation))# true
-		print("Prueba función son tios: ", __esTia('fra', aviation, 'lat', aviarium))# true
-		print("Prueba función son tios: ", __esTia('eng', aviation, 'lat', aviarius))# false
+		print("Prueba función grado primas: ", __gradoPrimas('eng', aviation, 'lat', aviarium))
+		#print("Prueba función grado primas: ", __gradoPrimas('fra', aviation, 'lat', aviarium))
+		#print("Prueba función grado primas: ", __gradoPrimas('lat', aviarium, 'lat', aviarius))
+		#print("Prueba función grado primas: ", __gradoPrimas('lat', aviarium, 'afr', apartheid))
 
+		print("Prueba función son tios: ", __esTia('lat', aviarius, 'eng', aviation))  # true
+		print("Prueba función son tios: ", __esTia('fra', aviation, 'lat', aviarium))  # true
+		print("Prueba función son tios: ", __esTia('eng', aviation, 'lat', aviarius))  # false
+
+		print("Está idioma relacionado palabra: ", __esPalabraRelacionadaIdioma(aviarius, "lat"))
+		print("Está idioma relacionado palabra: ", __esPalabraRelacionadaIdioma(aviarius, "fra"))
+		print("Está idioma relacionado palabra: ", __esPalabraRelacionadaIdioma(hija, "ita"))
+
+		print("Idiomas relacionados palabra: ", __idiomasRelacionadosPalabra(avis))
+		print("Idiomas relacionados palabra: ", __idiomasRelacionadosPalabra(aviarius))
+
+		print("Palabras en un idioma originadas por una palabra específica: ", __palabrasEnUnIdiomaOriginadasPorPalabra(avis, "lat"))
+		print("Palabras en un idioma originadas por una palabra específica: ", __palabrasEnUnIdiomaOriginadasPorPalabra(avis, "fra"))
+
+		print("Listar palabras comunes dos idiomas: ", __listarPalabrasComunesIdiomas("ita", "lat"))
+		print("Listar palabras comunes dos idiomas: ", __listarPalabrasComunesIdiomas("eng", "lat"))
+		print("Listar palabras comunes dos idiomas: ", __listarPalabrasComunesIdiomas("afr", "lat"))
+
+		print("Contar palabras comunes dos idiomas: ", __numeroPalabrasComunesIdiomas("nada", "aaa"))
+		print("Contar palabras comunes dos idiomas: ", __numeroPalabrasComunesIdiomas("alejandra", "asdrf"))
 		time.sleep(10)
 
 #-lat: avis
