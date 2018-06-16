@@ -3,7 +3,7 @@ from tkinter import *
 import tkinter.ttk as TTK
 import tkinter.scrolledtext as tkst
 
-import backend as bk
+import backend3 as bk
 
 
 def hello():
@@ -36,37 +36,37 @@ def run_query(tipoQuery,entry1,entry2,opcion):
     if (tipoQuery=="palabra_palabra"):
         print("es del tipo palabra_palabra")
         if(letraOpcion[0]=="A"):
-            bk.__sonHermanos(string1,string2)
+            print(bk.__sonHermanos(words[string1],words[string2]))
         elif(letraOpcion[0]=="B"):
-            bk.__sonPrimas(string1,string2)
+            print(bk.__sonPrimas(words[string1],words[string2]))
         elif(letraOpcion[0]=="C"):
-            bk.__esHija(string1,string2)
+            print(bk.__esHija(words[string1],words[string2]))
         elif(letraOpcion[0]=="D"):
-            bk.__esTia(string1,string2)
+            print(bk.__esTia(words[string1],words[string2]))
         elif(letraOpcion[0]=="E"):
-            bk.__gradoPrimas(string1,string2)
+            print(bk.__gradoPrimas(words[string1],words[string2]))
 
     if(tipoQuery=="palabra_idioma"):
         print("es del tipo palabra_idioma")
         if(letraOpcion[0]=="A"):
             print(letraOpcion[0])
             print("entra aqui mae")
-            bk.__esPalabraRelacionadaIdioma(string1,string2)
+            print(bk.__esPalabraRelacionadaIdioma(words[string1],words[string2]))
         elif(letraOpcion[0]=="B"):
-            bk.__palabrasEnUnIdiomaOriginadasPorPalabra(string1,string2)
+            print(bk.__palabrasEnUnIdiomaOriginadasPorPalabra(words[string1],words[string2]))
         elif(letraOpcion[0]=="C"):
-            bk.__idiomasRelacionadosPalabra(string1,string2)
-        
+            print(bk.__idiomasRelacionadosPalabra(words[string1],words[string2]))
+
     if(tipoQuery=="idioma_idioma"):
         print("es del tipo idioma_idioma")
         if(letraOpcion[0]=="A"):
-            bk.__numeroPalabrasComunesIdiomas(string1,string2)
+            print(bk.__numeroPalabrasComunesIdiomas(words[string1],words[string2]))
         elif(letraOpcion[0]=="B"):
-            bk.__listarPalabrasComunesIdiomas(string1,string2)
+            print(bk.__listarPalabrasComunesIdiomas(words[string1],words[string2]))
         elif(letraOpcion[0]=="C"):
-            bk.__idiomaMasAporto(string1,string2)
+            print(bk.__idiomaMasAporto(words[string1],words[string2]))
         elif(letraOpcion[0]=="D"):
-            bk.__listarIdiomasAportaronOtro(string1,string2)
+            print(bk.__listarIdiomasAportaronOtro(words[string1],words[string2]))
 
 def salir():
     root.destroy()
@@ -78,7 +78,7 @@ def carga_opciones(root):
 
     labelRelaciones = Label(frameCuadro, text="1. Relaciones a considerar",width=28,height=2)
     labelRelaciones.place(x=0,y=0)
-    
+
     var_derived = BooleanVar()
     var_ety = BooleanVar()
     var_related = BooleanVar()
@@ -87,28 +87,28 @@ def carga_opciones(root):
     var_form = BooleanVar()
     var_from = BooleanVar()
     var_ortho = BooleanVar()
-    
+
     checkBox_derived = Checkbutton(frameCuadro, text="rel:derived", variable=var_derived, command= lambda: var_states(var_derived,var_ety,var_related,var_origin,var_etymology,var_form,var_from,var_ortho))
     checkBox_derived.place(x=30,y=30)
-    
+
     checkBox_ety = Checkbutton(frameCuadro, text="rel:etymologically", variable=var_ety, command= lambda: var_states(var_derived,var_ety,var_related,var_origin,var_etymology,var_form,var_from,var_ortho))
     checkBox_ety.place(x=30,y=50)
-    
+
     checkBox_related = Checkbutton(frameCuadro, text="rel:etymologically_related", variable=var_related, command= lambda: var_states(var_derived,var_ety,var_related,var_origin,var_etymology,var_form,var_from,var_ortho))
     checkBox_related.place(x=30,y=70)
-    
+
     checkBox_origin = Checkbutton(frameCuadro, text="rel:etymological_origin_of", variable=var_origin, command= lambda: var_states(var_derived,var_ety,var_related,var_origin,var_etymology,var_form,var_from,var_ortho))
     checkBox_origin.place(x=30,y=90)
-    
+
     checkBox_etymology = Checkbutton(frameCuadro, text="rel:etymology", variable=var_etymology, command= lambda: var_states(var_derived,var_ety,var_related,var_origin,var_etymology,var_form,var_from,var_ortho))
     checkBox_etymology.place(x=30,y=110)
-    
+
     checkBox_form = Checkbutton(frameCuadro, text="rel:has_derived_form", variable=var_form, command= lambda: var_states(var_derived,var_ety,var_related,var_origin,var_etymology,var_form,var_from,var_ortho))
     checkBox_form.place(x=30,y=130)
 
     checkBox_from = Checkbutton(frameCuadro, text="rel:has_derived_from", variable=var_from, command= lambda: var_states(var_derived,var_ety,var_related,var_origin,var_etymology,var_form,var_from,var_ortho))
     checkBox_from.place(x=30,y=150)
-    
+
     checkBox_ortho = Checkbutton(frameCuadro, text="rel:variant:orthography", variable=var_ortho, command= lambda: var_states(var_derived,var_ety,var_related,var_origin,var_etymology,var_form,var_from,var_ortho))
     checkBox_ortho.place(x=30,y=170)
 
@@ -127,7 +127,7 @@ def palabra_palabra(root):
     #Checkbox
 
     carga_opciones(root)
-    
+
     #Palabra 1
     labelPalabra1 = Label(frameWigets, text="2. Palabra 1",width=28,height=2)
     labelPalabra1.place(x=0,y=10)
@@ -165,17 +165,17 @@ def palabra_palabra(root):
     a = "japones"
     tree.insert(subItem,END, text = "elemento 3", iid=a)
     tree.insert(a,END,text ="kulingao")
-    tree.pack() 
-    
+    tree.pack()
+
     botonEjecutar=Button(frameWigets,width=28,height=2, text="Ejecutar",bg="dodger blue", command= lambda: run_query("palabra_palabra",varEntry1,varEntry2,varCombo))
     botonEjecutar.place(x=0,y=300)
-    
+
     root.mainloop()
 
 
 def palabra_idioma(root):
     print("Palabra-Idioma")
-    
+
     frameWigets = Frame(root,width=200,height=400 ,bg="cornsilk2")
     frameWigets.place(x=0,y=200)
 
@@ -183,7 +183,7 @@ def palabra_idioma(root):
     frameTexto.place(x=200,y=0)
 
     carga_opciones(root)
-    
+
     #Palabra 1
     labelPalabra1 = Label(frameWigets, text="2. Palabra",width=28,height=2)
     labelPalabra1.place(x=0,y=10)
@@ -222,11 +222,11 @@ def palabra_idioma(root):
     tree.insert(subItem,END, text = "elemento 3", iid=a)
     tree.insert(a,END,text ="kulingao")
 
-    tree.pack() 
+    tree.pack()
 
     botonEjecutar=Button(frameWigets,width=28,height=2, text="Ejecutar",bg="dodger blue", command= lambda: run_query("palabra_idioma",varEntry1,varEntry2,varCombo))
     botonEjecutar.place(x=0,y=300)
-    
+
     root.mainloop()
 
 def idioma_idioma(root):
@@ -239,7 +239,7 @@ def idioma_idioma(root):
     frameTexto.place(x=200,y=0)
 
     carga_opciones(root)
-    
+
     #Palabra 1
     labelPalabra1 = Label(frameWigets, text="2. Idioma 1",width=28,height=2)
     labelPalabra1.place(x=0,y=10)
@@ -251,7 +251,7 @@ def idioma_idioma(root):
     #Palabra 2
     labelPalabra2 = Label(frameWigets, text="3. Idioma 2", width=28,height=2)
     labelPalabra2.place(x=0,y=110)
-    
+
     varEntry2 = StringVar()
     entryPalabra2 = Entry(frameWigets,width=20, textvariable=varEntry2)
     entryPalabra2.place(x=30,y=150)
@@ -270,7 +270,7 @@ def idioma_idioma(root):
     #TextField
     #text=tkst.ScrolledText(frameTexto,width=60,height=37)
     #text.pack()
-    
+
     tree = TTK.Treeview(frameTexto)
 
     tree.insert("",END,text="Nelson")
@@ -281,15 +281,15 @@ def idioma_idioma(root):
     tree.insert(subItem,END, text = "elemento 3", iid=a)
     tree.insert(a,END,text ="kulingao")
 
-    tree.pack()    
+    tree.pack()
     root.mainloop()
-    
+
 
 
 root = tkinter.Tk()
 root.title("Descubre el origen de las palabras...")
 root.geometry("700x600+100+50")
- 
+
 menubar = Menu(root)
 
 # create a pulldown menu, and add it to the menu bar
@@ -318,7 +318,7 @@ var=BooleanVar()
 #checkBox_etymology.place(x=50,y=30)
 # display the menu
 root.config(menu=menubar)
+
+words, languages = bk.loadDBRels()
+
 root.mainloop()
-
-
-
