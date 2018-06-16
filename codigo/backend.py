@@ -10,7 +10,7 @@ create_terms('I,getHijos2, descendientes,gradoPrimos, sonPrimas, lIdiomasRpalabr
 create_terms('getHijos2,resultado,_estaRelacionada, _soloIdiomas,getIdiomas, H1, getHijos2,R_IP, R_P,R_IH, R_H, R2, descendientes,getPadres2, ascendencia,_antepasados,A,B,C,D,E,F,GR1,R1, R2,R3')
 create_terms('contarPalabrasComunes, C1')
 create_terms("lPalabrasIdiomaOriginadas, getHijosIdioma,Palabra ,Idioma,Hijos, getHijosI, hijosIdioma, getPrimas, X, Y ")
-create_terms('getPalabrasXidioma, palabrasComunes, I1, I2, IA, IB, IP1, IP2, IPP1, IPP2, IT, IS, sonElMismo, O')
+create_terms('getPalabrasXidioma, palabrasComunes, I1, I2, IA, IB, IP1, IP2, IPP1, IPP2, IT, IS, sonElMismo, O, numeroPalabrasComunes, _hijosDeUnIdioma, __hijosDeUnIdioma')
 
 #pyEngine.Logging = True
 #logging.basicConfig(level=logging.INFO)
@@ -62,48 +62,43 @@ esTio(IT, T, IS, S, R) <= esHijo(IS, S, IP, P) & sonHermanos(IT, T, IP, P) & (P!
 esTio(IT, T, IS, S, R) <= esHijo(IS, S, IP, P) & sonHermanos(IT, T, IP, P) & (IP!=IT)
 getPadre(IH, H, I)<=esHijo(IP, P, IH, H)
 
-
 #--- Determinar si una palabra está relacionada con un idioma
-
 getHijos2(P, IH, H) <= esHijo(IP, P, IH, H)
 descendientes(P, I, R) <= getHijos2 (P, I, R)
 descendientes(P, I, R) <= getHijos2 (P, R_IH, R_H) & descendientes(R_H, I, R)
 getPadres2(H, IP, P) <= esHijo(IP, P, IH, H)
 ascendencia(H, I, R) <= getPadres2(H, I, R)
 ascendencia(H, I, R) <= getPadres2(H, R_IP, R_P) & ascendencia(R_P, I, R)
-
 # Idioma de la misma palabra
 getIdiomas(P,IP, IP) <= esHijo(IP, P, IH, H)
 getIdiomas(H,IH, IP) <= esHijo(IP, P, IH, H)
-
 _antepasados(H, I, R) <= ascendencia(H, I, R)
 _antepasados(P, I, R) <= descendientes(P, I, R)
 _antepasados(P, I, R) <= getIdiomas(P,I, R)
-
 #---- Listar los idiomas relacionados con una palabra
 _soloIdiomas(P, I)<=_antepasados(P, I, R)
-
-
 #------- Obtener el conjunto de todas las palabras en un idioma originadas por una palabra
 getHijosI(P, H, IH) <= esHijo(IP, P, IH, H)
 hijosIdioma(P, IH, H) <= getHijosI(P, H, IH)
 hijosIdioma(P, IH, R) <= getHijosI(P, H, IH) & hijosIdioma(H, IH, R)
-
 #------- Palabras comunes dos idiomas
 #----Determinar si una palabra está relacionada con un idioma
 _estaRelacionada(P, IH, R) <= _antepasados(P, IH, R) #& (I==IH)
 _estaRelacionada(P, IH, True) <= _estaRelacionada(P, IH, R)
 _estaRelacionada(P, IH, False) <= ~_estaRelacionada(P, IH, R)
-
 #-----------  Listar todas las palabras comunes entre dos idiomas
 create_terms('getPalabrasXidioma, palabrasComunes, I1, I2')
 getPalabrasXidioma(I, R) <= esHijo(IP, P, I, R)
 getPalabrasXidioma(I, R) <= esHijo(I, R, IH, H)
 palabrasComunes(I1, I2, R1) <= getPalabrasXidioma(I1, R1) & getPalabrasXidioma(I2, R1) #& (R1==R2)
-
 #-----------Número de palabras comunes entre dos idiomas
-contarPalabrasComunes(I1, I2, R1) <= getPalabrasXidioma(I1, R1) & getPalabrasXidioma(I2, R1) # & (R1==R2)
+#contarPalabrasComunes(I1, I2, R1) <= getPalabrasXidioma(I1, R1) & getPalabrasXidioma(I2, R1) # & (R1==R2)
+#----------- Número de palabras comunes entre dos idiomas
+(numeroPalabrasComunes[I1, I2]==len_(R1)) <= palabrasComunes(I1, I2, R1)
+contarPalabrasComunes(I1, I2, R1) <= (R1==[numeroPalabrasComunes[I1, I2]])
 
+
+_hijosDeUnIdioma(IP,IH, H) <= esHijo(IP,P,IH,H)
 
 def readFileWord(respuesta):
 	tmp = respuesta.split('zzz')
@@ -112,10 +107,12 @@ def readFileWord(respuesta):
 	global DATABASE
 	with open(DATABASE) as f:
 		for i, line in enumerate(f):
-			if i == linea-1:
+			if i == linea:
 				if izq:
+					print(i, linea, tmp[2], '+++++++++++++++++++++++++++++++++++++++++')
 					return line.split('\t')[0]
 				else:
+					print(i, linea, tmp[2], '-----------------------------------------')
 					return line.split('\t')[2].split('\n')[0]
 
 
@@ -168,7 +165,8 @@ def __palabrasEnUnIdiomaOriginadasPorPalabra(_palabra, _idioma):
 	if (consulta):
 		words = []
 		for r in consulta.answers:
-			words.append(readFileWord(r[0]))
+			words.append(r[0])
+			#words.append(readFileWord(r[0]))
 		return words
 	else:
 		return "No se obtuvo coincidencias"
@@ -191,7 +189,8 @@ def __listarPalabrasComunesIdiomas(_idiomaA, _idiomaB):
 	if (consulta):
 		words = []
 		for r in consulta.answers:
-			words.append(readFileWord(r[0]))
+			words.append(r[0])
+			#words.append(readFileWord(r[0]))
 		return words
 	else:
 		return "No hubo coincidencia."
@@ -200,9 +199,22 @@ def __numeroPalabrasComunesIdiomas(_idiomaA, _idiomaB):
 	# Contar todas las palabras comunes entre dos idiomas
 	consulta = ask('contarPalabrasComunes('+_idiomaA+', '+_idiomaB+', R1)')
 	if (consulta):
-		return consulta.answers[0][0][0]
+		return _len(consulta.answers)
 	else:
 		return 0
+
+def __hijosDeUnIdioma(_idioma):
+	# Listar todas las palabras comunes entre dos idiomas
+	consulta = ask('getPalabrasXidioma('+_idioma+', A)')
+	if (consulta):
+		words = []
+		for r in consulta.answers:
+			print(r[0])
+			words.append(r[0])
+			#words.append(readFileWord(r[0]))
+			return words
+		else:
+			return "No hubo coincidencia."
 
 db = []
 threadLock = threading.Lock()
@@ -230,50 +242,50 @@ def loadDBRels():
 			tmpRgt = rgt.split(': ')
 			langRgt, wordRgt = tmpRgt[0], tmpRgt[1].split("\n")[0]
 
-			try:
-				u = langs[langLft]
-			except KeyError:
-				langs[langLft] = langLft
+			#try:
+			#	u = langs[langLft]
+			#except KeyError:
+			#	langs[langLft] = langLft
 
-			try:
-				u = langs[langRgt]
-			except KeyError:
-				langs[langRgt] = langRgt
+			#try:
+			#	u = langs[langRgt]
+			#except KeyError:
+			#	langs[langRgt] = langRgt
 
-			try:
-				u = words[wordLft]
-				saved += 1
-			except KeyError:
-				words[wordLft] = 'zzz'+str(i)+'zzz1'
+			#try:
+			#	u = words[wordLft]
+			#	saved += 1
+			#except KeyError:
+			#	words[wordLft] = 'zzz'+str(i)+'zzz1'
 
-			try:
-				u = words[wordRgt]
-				saved += 1
-			except KeyError:
-				words[wordRgt] = 'zzz'+str(i)+'zzz2'
+			#try:
+			#	u = words[wordRgt]
+			#	saved += 1
+			#except KeyError:
+			#	words[wordRgt] = 'zzz'+str(i)+'zzz2'
 
 			#if wordLft == 'beest' or wordRgt == 'beest' or wordLft == 'apartheid' or wordRgt == 'apartheid':
 			#	print("beep:", (str(langLftIdx), hash(words[wordLft]), str(langRgtIdx), hash(words[wordRgt])), rel)
 			if(rel == 'rel:derived'):
-				+ derived(langLft, words[wordLft], langRgt, words[wordRgt])
+				+ derived(langLft, wordLft, langRgt, wordRgt)
 			elif(rel == 'rel:etymologically'):
-				+ etymologically(langLft, words[wordLft], langRgt, words[wordRgt])
+				+ etymologically(langLft, wordLft, langRgt, wordRgt)
 			elif(rel == 'rel:etymologically_related'):
-				+ etymologically_related(langLft, words[wordLft], langRgt, words[wordRgt])
+				+ etymologically_related(langLft, wordLft, langRgt, wordRgt)
 			elif(rel == 'rel:etymology'):
-				+ etymology(langLft, words[wordLft], langRgt, words[wordRgt])
+				+ etymology(langLft, wordLft, langRgt, wordRgt)
 			elif(rel == 'rel:etymological_origin_of'):
-				+ etymological_origin_of(langRgt, words[wordRgt], langLft, words[wordLft])
+				+ etymology(langRgt, wordRgt, langLft, wordLft)
 			elif(rel == 'rel:has_derived_form'):
-				+ has_derived_form(langLft, words[wordLft], langRgt, words[wordRgt])
+				+ has_derived_form(langLft, wordLft, langRgt, wordRgt)
 			elif(rel == 'rel:is_derived_from'):
-				+ has_derived_form(langRgt, words[wordRgt], langLft, words[wordLft])
+				+ has_derived_form(langRgt, wordRgt, langLft, wordLft)
 			elif(rel.find('rel:variant') > -1):
-				+ variant(langLft, words[wordLft], langRgt, words[wordRgt])
+				+ variant(langLft, wordLft, langRgt, wordRgt)
 
 			i += 1
 			if i%100000==0:
-				print("beep:", langs[langLft], words[wordLft], langs[langRgt], words[wordRgt], rel, len(words), len(langs))
+				print("beep:", langLft, wordLft, langRgt, wordRgt, rel, len(words), len(langs))
 				print(i)
 
 		print("dbSize:",i, "lenWords:", len(words), "saved:", saved)
@@ -297,10 +309,18 @@ def cargarRelaciones(_derived, _etymologically, _etymologically_related, _etymol
 		esHijo(IP, P, IH, H) <= etymology(IP, P, IH, H)
 	else:
 		pyEngine.retract(esHijo(IP, P, IH, H) <= etymology(IP, P, IH, H))
+	#if (etymological_origin_of):
+	#	esHijo(IP, P, IH, H) <= etymology(IH, H, IP, P)
+	#else:
+	#	pyEngine.retract(esHijo(IP, P, IH, H) <= etymology(IP, P, IH, H))
 	if (_has_derived_form):
 		esHijo(IP, P, IH, H) <= has_derived_form(IP, P, IH, H)
 	else:
 		pyEngine.retract(esHijo(IP, P, IH, H) <= has_derived_form(IP, P, IH, H))
+	#if (is_derived_from):
+	#	esHijo(IP, P, IH, H) <= has_derived_form(IH, H, IP, P)
+	#else:
+	#	pyEngine.retract(esHijo(IP, P, IH, H) <= has_derived_form(IP, P, IH, H))
 	if (_variant):
 		esHijo(IP, P, IH, H) <= variant(IP, P, IH, H)
 	else:
@@ -312,22 +332,24 @@ def main():
 	cargarRelaciones(True, True, True, True, True, True, True, True)
 	while True:
 		idiomaPadre = 'afr'
-		padre = words['bees']
+		padre = 'bees'
 		idiomaHijo = 'nld'
-		hija = words['beest']
+		hija = 'beest'
 		print(padre, hija, 'bees', 'beest')
 		print("Prueba función es hija: ", __esHija(idiomaPadre, padre, idiomaHijo, hija))
 		print("Prueba función es hija: ", __esHija(idiomaHijo, hija, idiomaPadre, padre))
 
-		apartheid = words['apartheid']
-		aviation = words['aviation']
-		aviarius = words['aviarius']
-		aviarium = words['aviarium']
-		avis = words['avis']
+		apartheid = 'apartheid'
+		aviation = 'aviation'
+		aviarius = 'aviarius'
+		aviarium = 'aviarium'
+		avis = 'avis'
 		print("Prueba función son hermanas: ", __sonHermanos('fra', apartheid, 'ita', apartheid))  # true
 		print("Prueba función son hermanas: ", __sonHermanos('fra', apartheid, 'afr', apartheid))  # false
 		print("Prueba función son hermanas: ", __sonHermanos('afr', apartheid, 'afr', apartheid))  # false
 		print("Prueba función son hermanas: ", __sonHermanos('fra', aviation, 'lat', aviarius))  # true
+
+		print("Hijos idioma: ", __hijosDeUnIdioma('sco'))  # true
 
 		print("Prueba función son primas: ", __sonPrimas('eng', aviation, 'lat', aviarium))  # true
 		print("Prueba función son primas: ", __sonPrimas('fra', aviation, 'lat', aviarium))  # false
@@ -358,7 +380,7 @@ def main():
 		print("Listar palabras comunes dos idiomas: ", __listarPalabrasComunesIdiomas("afr", "lat"))
 
 		print("Contar palabras comunes dos idiomas: ", __numeroPalabrasComunesIdiomas("ita", "fra"))
-		print("Contar palabras comunes dos idiomas: ", __numeroPalabrasComunesIdiomas("lat", "nlb"))
+		print("Contar palabras comunes dos idiomas: ", __numeroPalabrasComunesIdiomas("eng", "lat"))
 		break
 		time.sleep(10)
 

@@ -7,7 +7,7 @@ create_terms('I,getHijos2, descendientes,gradoPrimos, sonPrimas, lIdiomasRpalabr
 create_terms('getHijos2,resultado,_estaRelacionada, _soloIdiomas,getIdiomas, H1, getHijos2,R_IP, R_P,R_IH, R_H, R2, descendientes,getPadres2, ascendencia,_antepasados,A,B,C,D,E,F,GR1,R1, R2,R3')
 create_terms('getHijos2,resultado,_estaRelacionada, _soloIdiomas,getIdiomas, H1, getHijos2,R_IP, R_P,R_IH, R_H, R2, descendientes,getPadres2, ascendencia,_antepasados,A,B,C,D,E,F,GR1,R1, R2,R3')
 pyDatalog.create_terms("lPalabrasIdiomaOriginadas, getHijosIdioma,Palabra ,Idioma,Hijos, getHijosI, hijosIdioma ")
-create_terms('contarPalabrasComunes,getIdiomaPadre, C1, numeroPalabrasComunes')
+create_terms('contarPalabrasComunes,getIdiomaPadre, C1, numeroPalabrasComunes, __contadorPalabras')
 
 + etymologically("nada", "luis","nada", "catalina")
 + derived("aaa", "alejandra","aaa", "margarita")
@@ -72,7 +72,7 @@ sonHermanos(A, B) <= sonHermanos(A, B, R)
 sonPrimos(P1, P2, G, True) <= sonPrimos(P1, P2, G )
 sonPrimos(P1, P2, 0, False) <= ~sonPrimos(P1, P2, G)
 sonPrimos(P1, P2, G) <= esHijo(P1, PP1) & esHijo(P2, PP2) & sonHermanos(PP1, PP2) & (G==1)
-sonPrimos(P1, P2, G) <= esHijo(P1, PP1) & esHijo(P2, PP2) & ~sonHermanos(PP1, PP2) & sonPrimos(PP1, PP2, G1) & (G==G1+1) 
+sonPrimos(P1, P2, G) <= esHijo(P1, PP1) & esHijo(P2, PP2) & ~sonHermanos(PP1, PP2) & sonPrimos(PP1, PP2, G1) & (G==G1+1)
 sonPrimas(P1, P2) <= sonPrimos(P1, P2, G)
 
 #------- Determina si dos palabras son primas, y el grado
@@ -97,11 +97,11 @@ getIdiomas(P,IP, IP) <= esHijo(IP, P, IH, H)
 getIdiomas(H,IH, IP) <= esHijo(IP, P, IH, H)
 
 _antepasados(H, I, R) <= ascendencia(H, I, R)
-_antepasados(P, I, R) <= descendientes(P, I, R) 
-_antepasados(P, I, R) <= getIdiomas(P,I, R) 
+_antepasados(P, I, R) <= descendientes(P, I, R)
+_antepasados(P, I, R) <= getIdiomas(P,I, R)
 
 #---- Listar los idiomas relacionados con una palabra
-_soloIdiomas(P, I)<=_antepasados(P, I, R) 
+_soloIdiomas(P, I)<=_antepasados(P, I, R)
 
 
 #------- Obtener el conjunto de todas las palabras en un idioma originadas por una palabra
@@ -126,20 +126,20 @@ palabrasComunes(I1, I2, R1) <= getPalabrasXidioma(I1, R1) & getPalabrasXidioma(I
 contarPalabrasComunes(I1, I2, R1) <= (R1==[numeroPalabrasComunes[I1, I2]])
 
 
-
 create_terms('contribucionXidiomaMin,rContPalabras,cPalabras,contPalabras,prueba9,prueba10, prueba7,prueba8, contaPalabras,nPalabrasXidioma2,numTotalPalabras, contadorPalabras,getIdiomaPadre3,nPalabrasXidioma,contribucionXidioma, N2, numPalabras,prueba4, prueba44,prueba3,prueba33,porcentajes2, getIdiomaPadre2,S,N,Z,sumarPalabrasXidioma,totalPalabras,nTotalPalabras,porcentajes,numTotalPalabras,numPalabrasIdioma, prueba2, Y,contarPadres, prueba, IH, Res, Total, consultaPrincipal, getListaIdiomas,getContarPalabrasXidioma,getContarPalabrasXidioma')
 
 #------------------------------------- Idiomas que contribuyeron con otros -------------------
-create_terms('mayorContribucion,__mayorContribucion, conPalabras,__contadorPalabras')
+create_terms('mayorContribucion,__mayorContribucion, conPalabras,__contadorPalabras, _hijosDeUnIdioma')
 rContPalabras(IH, R) <= (R==contPalabras[IH])
-(contPalabras[IH]==sum_(T, for_each=IP)) <= (T==nPalabrasXidioma2[IH, IP]) 
-(nPalabrasXidioma2[IH, IP]==running_sum_(T, group_by=IP, order_by=P))  <= getIdiomaPadre2(IH, IP, P, T) 
+(contPalabras[IH]==sum_(T, for_each=IP)) <= (T==nPalabrasXidioma2[IH, IP])
+(nPalabrasXidioma2[IH, IP]==running_sum_(T, group_by=IP, order_by=P))  <= getIdiomaPadre2(IH, IP, P, T)
 getIdiomaPadre2(IH, IP, P, T) <= esHijo(IP, P, IH, H) & (IP!=IH) &(T==1)
-(nPalabrasXidioma[IH, IP]==running_sum_(N2, group_by=IP, order_by=P))  <= getIdiomaPadre2(IH, IP, P, T) & (rContPalabras(IH, N) ) & (N2==100/N) 
-contribucionXidioma(IH, IP, T) <=  (T==nPalabrasXidioma[IH, IP]) 
+(nPalabrasXidioma[IH, IP]==running_sum_(N2, group_by=IP, order_by=P))  <= getIdiomaPadre2(IH, IP, P, T) & (rContPalabras(IH, N) ) & (N2==100/N)
+contribucionXidioma(IH, IP, T) <=  (T==nPalabrasXidioma[IH, IP])
 (mayorContribucion[IH]==max_(IP, order_by=T))<= (contribucionXidioma(IH, IP, T))
 __mayorContribucion(IH, T) <=  (T==mayorContribucion[IH])
 #---------------------------------------------------------------
+_hijosDeUnIdioma(IP) <= esHijo(IP,P,IH,H)
 
 
 # ----------
@@ -258,9 +258,9 @@ def main():
 	#print("Listar palabras comunes dos idiomas: ", __listarPalabrasComunesIdiomas("nada", "aaa"))
 	#print("Listar palabras comunes dos idiomas: ", __listarPalabrasComunesIdiomas("alejandra", "asdrf"))
 	#print("Contar palabras comunes dos idiomas: ", __numeroPalabrasComunesIdiomas("nada", "aaa"))
-	#print("Contar palabras comunes dos idiomas: ", __numeroPalabrasComunesIdiomas("alejandra", "asdrf"))	
+	#print("Contar palabras comunes dos idiomas: ", __numeroPalabrasComunesIdiomas("alejandra", "asdrf"))
 	#(P[IH]==len_(Y)) <= getIdiomaPadre(IH, IP, P)
-	
+
 	#print(P['esp']==IH)
 	#print(ask('porcentajes(esp, IP, P, T )'))
 	#print(ask('getIdiomaPadre2(esp, IP, P, T) '))
@@ -271,7 +271,7 @@ def main():
 	#print(ask('__mayorContribucion(esp,  P)'))
 	#print("Idioma que más aportó: ", __idiomaMasAporto('esp'))
 	#print("lista idiomas que más aportaron: ",__listarIdiomasAportaronOtro("esp"))
-	print(ask('__contadorPalabras(esp, IP)'))
+	print(ask('_hijosDeUnIdioma(esp)'))
 
 
 	#contadorPalabras
@@ -279,10 +279,4 @@ def main():
 	#print(__listarPalabrasComunesIdiomas("aaa", "nada"))
 	#print(__numeroPalabrasComunesIdiomas("aaa", "nada"))
 
-main()		
-
-
-	
-
-
-
+main()

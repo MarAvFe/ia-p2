@@ -107,6 +107,7 @@ palabrasComunes(I1, I2, R1) <= getPalabrasXidioma(I1, R1) & getPalabrasXidioma(I
 contarPalabrasComunes(I1, I2, R1) <= getPalabrasXidioma(I1, R1) & getPalabrasXidioma(I2, R2) & (R1==R2)
 
 
+
 def __sonHermanos(_nombreA, _nombreB):
 	# Determinar si dos palabras son heman@s
 	if (ask('sonHermanos('+_nombreA+','+ _nombreB+ ', R)')):
