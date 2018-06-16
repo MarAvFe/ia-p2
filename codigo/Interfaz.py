@@ -2,14 +2,12 @@ import tkinter
 from tkinter import *
 import tkinter.ttk as TTK
 import tkinter.scrolledtext as tkst
+
 import backend as bk
-
-
 
 
 def hello():
     print("Hola mundo")
-
 
 
 def var_states(derived,ety,related,origin,etymology,form,rel_from,ortho):
@@ -21,18 +19,54 @@ def var_states(derived,ety,related,origin,etymology,form,rel_from,ortho):
     print(form.get())
     print(rel_from.get())
     print(ortho.get())
-    print("Aquí deberia llamar a la funcion de marcello con la variable.get()")
-    #if(varDerived.get()==True):
-    #    print(True)
-    #else:    
-    #    print(False)
-    #print(varDerived.get())
-    #print("el checkbox esta: %d" % (varDerived))
+    #print("Aquí deberia llamar a la funcion de marcello con la variable.get()")
 
-def run_query(entry1, entry2,opcion):
+    bk.cargarRelaciones(derived.get(),ety.get(),related.get(),origin.get(),etymology.get(),form.get(),rel_from.get(),ortho.get())
+
+
+def run_query(tipoQuery,entry1,entry2,opcion):
     print("Dato de query 1 es: %s" % entry1.get())
     print("Dato de query 2 es: %s" % entry2.get())
     print("El query es %s" % opcion.get())
+
+    letraOpcion = opcion.get()
+    string1 = entry1.get()
+    string2 = entry2.get()
+
+    if (tipoQuery=="palabra_palabra"):
+        print("es del tipo palabra_palabra")
+        if(letraOpcion[0]=="A"):
+            bk.__sonHermanos(string1,string2)
+        elif(letraOpcion[0]=="B"):
+            bk.__sonPrimas(string1,string2)
+        elif(letraOpcion[0]=="C"):
+            bk.__esHija(string1,string2)
+        elif(letraOpcion[0]=="D"):
+            bk.__esTia(string1,string2)
+        elif(letraOpcion[0]=="E"):
+            bk.__gradoPrimas(string1,string2)
+
+    if(tipoQuery=="palabra_idioma"):
+        print("es del tipo palabra_idioma")
+        if(letraOpcion[0]=="A"):
+            print(letraOpcion[0])
+            print("entra aqui mae")
+            bk.__esPalabraRelacionadaIdioma(string1,string2)
+        elif(letraOpcion[0]=="B"):
+            bk.__palabrasEnUnIdiomaOriginadasPorPalabra(string1,string2)
+        elif(letraOpcion[0]=="C"):
+            bk.__idiomasRelacionadosPalabra(string1,string2)
+        
+    if(tipoQuery=="idioma_idioma"):
+        print("es del tipo idioma_idioma")
+        if(letraOpcion[0]=="A"):
+            bk.__numeroPalabrasComunesIdiomas(string1,string2)
+        elif(letraOpcion[0]=="B"):
+            bk.__listarPalabrasComunesIdiomas(string1,string2)
+        elif(letraOpcion[0]=="C"):
+            bk.__idiomaMasAporto(string1,string2)
+        elif(letraOpcion[0]=="D"):
+            bk.__listarIdiomasAportaronOtro(string1,string2)
 
 def salir():
     root.destroy()
@@ -104,18 +138,19 @@ def palabra_palabra(root):
 
     #Palabra 2
     labelPalabra2 = Label(frameWigets, text="3. Palabra 2", width=28,height=2)
-    labelPalabra2.place(x=0,y=110)
+    labelPalabra2.place(x=0,y=80)
 
     varEntry2 = StringVar()
     entryPalabra2 = Entry(frameWigets,width=20, textvariable=varEntry2)
-    entryPalabra2.place(x=30,y=150)
+    entryPalabra2.place(x=30,y=120)
 
     #menu
     labelPalabra1 = Label(frameWigets, text="4. Determinar si las palabras son:",width=30,height=2)
-    labelPalabra1.place(x=0,y=200)
+    labelPalabra1.place(x=0,y=180)
+
 
     varCombo = StringVar()
-    menuOpciones = TTK.Combobox(frameWigets,values=("Hermanas", "Primas", "Hija una de otra","Tia","Primas con grado"), width=30, textvariable=varCombo)
+    menuOpciones = TTK.Combobox(frameWigets,values=("A: Hermanas", "B: Primas", "C: Hija 1 de 2","D: Tia 1 de 2","E: Primas con grado"), width=30, textvariable=varCombo)
     menuOpciones.place(x=0,y=240)
 
     #TextField
@@ -132,7 +167,7 @@ def palabra_palabra(root):
     tree.insert(a,END,text ="kulingao")
     tree.pack() 
     
-    botonEjecutar=Button(frameWigets,width=28,height=2, text="Ejecutar",bg="dodger blue", command= lambda: run_query(varEntry1,varEntry2,varCombo))
+    botonEjecutar=Button(frameWigets,width=28,height=2, text="Ejecutar",bg="dodger blue", command= lambda: run_query("palabra_palabra",varEntry1,varEntry2,varCombo))
     botonEjecutar.place(x=0,y=300)
     
     root.mainloop()
@@ -170,7 +205,7 @@ def palabra_idioma(root):
     labelPalabra1.place(x=0,y=200)
 
     varCombo = StringVar()
-    menuOpciones = TTK.Combobox(frameWigets,values=("Palabra relacioanda con idioma?", "Conjunto de todas las palabras originadas en idioma", "Listar idiomas relacionados con la palabra"), width=30, textvariable=varCombo)
+    menuOpciones = TTK.Combobox(frameWigets,values=("A: 1 Relacionada con 2", "B: Conjunto de todas las palabras originadas en 2", "C: Listar idiomas relacionados con la 1"), width=30, textvariable=varCombo)
     menuOpciones.place(x=0,y=240)
 
     #TextField
@@ -189,7 +224,7 @@ def palabra_idioma(root):
 
     tree.pack() 
 
-    botonEjecutar=Button(frameWigets,width=28,height=2, text="Ejecutar",bg="dodger blue", command= lambda: run_query(varEntry1,varEntry2,varCombo))
+    botonEjecutar=Button(frameWigets,width=28,height=2, text="Ejecutar",bg="dodger blue", command= lambda: run_query("palabra_idioma",varEntry1,varEntry2,varCombo))
     botonEjecutar.place(x=0,y=300)
     
     root.mainloop()
@@ -226,10 +261,10 @@ def idioma_idioma(root):
     labelPalabra1.place(x=0,y=200)
 
     varCombo = StringVar()
-    menuOpciones = TTK.Combobox(frameWigets,values=("Contar palabras comunes", "Listar palabras comunes", "Idioma que mas aporto a otro (%)","Listar idiomas que aportaron a otro"), width=30, textvariable=varCombo)
+    menuOpciones = TTK.Combobox(frameWigets,values=("A: Contar palabras comunes", "B: Listar palabras comunes", "C: Idioma que mas aporto a otro (%)","D: Listar idiomas que aportaron a otro"), width=30, textvariable=varCombo)
     menuOpciones.place(x=0,y=240)
 
-    botonEjecutar=Button(frameWigets,width=28,height=2, text="Ejecutar",bg="dodger blue", command= lambda: run_query(varEntry1,varEntry2,varCombo))
+    botonEjecutar=Button(frameWigets,width=28,height=2, text="Ejecutar",bg="dodger blue", command= lambda: run_query("idioma_idioma",varEntry1,varEntry2,varCombo))
     botonEjecutar.place(x=0,y=300)
 
     #TextField
@@ -284,4 +319,6 @@ var=BooleanVar()
 # display the menu
 root.config(menu=menubar)
 root.mainloop()
+
+
 
