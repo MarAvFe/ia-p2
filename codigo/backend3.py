@@ -117,7 +117,7 @@ __mayorContribucion(IH, T) <=  (T==mayorContribucion[IH])
 
 
 def readFileWord(respuesta):
-	tmp = respuesta.split('zzz')
+	tmp = respuesta.split('w')
 	linea = int(tmp[1])
 	izq = True if tmp[2] == '1' else False
 	global DATABASE
@@ -291,13 +291,13 @@ def loadDBRels():
 				u = words[wordLft]
 				saved += 1
 			except KeyError:
-				words[wordLft] = 'zzz'+str(i)+'zzz1'
+				words[wordLft] = 'w'+str(i)+'w1'
 
 			try:
 				u = words[wordRgt]
 				saved += 1
 			except KeyError:
-				words[wordRgt] = 'zzz'+str(i)+'zzz2'
+				words[wordRgt] = 'w'+str(i)+'w2'
 
 			#if wordLft == 'beest' or wordRgt == 'beest' or wordLft == 'apartheid' or wordRgt == 'apartheid':
 			#	print("beep:", (str(langLftIdx), hash(words[wordLft]), str(langRgtIdx), hash(words[wordRgt])), rel)
