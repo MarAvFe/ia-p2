@@ -140,10 +140,66 @@ sonHermanos(A, B) <= sonHermanos(A, B, R)
 
 
 
-**2.Palabras primas:** Dos palabras se consideran primas, si los padres de ambas son hermanos.
+**2. Palabras primas:** Dos palabras se consideran primas, si los padres de ambas son hermanos.
 ```
 ```
-**3. Palabra hija de otra:** 
+**3. Palabra hija de otra:** Esta búsqueda devuelve verdadero al buscar el padre de la supuesta hija, y que este último sea igual que el supuesto padre (palabra e idioma de la palabra padre).
+
+```
+```
+
+**4. Palabra tía de otra :** Para determinar si una palabra es tía de otra, lo primero es determinar el padre de la supuesta palabra sobrina, y el padre de este último; y con esto, se deterina si el tío y el padre de la palabra sobrina, son hermanos. Si esta última condición se cumple, la respuesta será verdadera; en caso contrario, falsa.
+
+```
+```
+
+**5. Grado de prima:** Esta función retornará el grado de parentesco que tienen dos palabras primas. Para su desarrollo, se utilizó recursividad, mediante la cuál se logró implementar un contador que almacena el grado en que dos palabras son primas.
+
+```
+```
+**6. Determinar si una palabra está relacionada con un idioma:** La lógica de esta consulta consiste en utilizando la palabra hija, obtener todos sus descendientes y ancestros, y verificar si es que alguno de estos coincide con el idioma de la búsqueda.
+
+```
+```
+**7. Obtener el conjunto de todas las palabras en un idioma originadas por una palabra específica:** Consulta similar a la número seis. Se buscan todos los descendientes y ancestros de una palabra y se retorna dicho resultado.
+
+```
+```
+**8. Listar los idiomas relacionados con una palabra:** Esta consulta es una extensión de la consulta siete. La variación que presenta es que se devuelven solo los idiomas obtenidos.
+
+```
+
+```
+**9. Contar las palabras comunes entre dos idiomas:** Consulta derivada de la consulta número diez, se utiliza la función len_ para obtener el número de palabras comunes entre dos idiomas.
+
+```
+(numeroPalabrasComunes[I1, I2]==len_(R1)) <= palabrasComunes(I1, I2, R1)
+contarPalabrasComunes(I1, I2, R1) <= (R1==[numeroPalabrasComunes[I1, I2]])
+```
+**10. Listar las palabras comunes entre dos idiomas:** Primero se filtran las palabras que se encuentran en los idiomas ingresados, y posteriormente, se compara palabra con palabra para revisar si es que existe una coincidencia entre idiomas, si la hubo, se muestra el resultado.
+```
+create_terms('getPalabrasXidioma, palabrasComunes, I1, I2')
+getPalabrasXidioma(I, R) <= esHijo(IP, P, I, R)
+getPalabrasXidioma(I, R) <= esHijo(I, R, IH, H)
+palabrasComunes(I1, I2, R1) <= getPalabrasXidioma(I1, R1) & getPalabrasXidioma(I2, R2) & (R1==R2)
+```
+**11. Idioma que más aportó a otro:** Extensión de la consulta número doce. Se obtienen la lista de todos los idiomas que aportaron a otro idioma y mediante el uso de la función de agregación max_, se obtiene el nombre del idioma que más aportó a otro.
+
+```
+(mayorContribucion[IH]==max_(IP, order_by=T))<= (contribucionXidioma(IH, IP, T))
+__mayorContribucion(IH, T) <=  (T==mayorContribucion[IH])
+```
+
+**12. Lista de todos los idiomas que aportaron a otro:** Para obtener la lista de todos los idiomas que aportaron a otro idioma, se utilizaron las funciones de agregación running_sum, que agrupa los resultados de una consulta según un criterio (en este caso, tipo de idioma), y suma el total de coincidencias.
+
+```
+rContPalabras(IH, R) <= (R==contPalabras[IH])
+(contPalabras[IH]==sum_(T, for_each=IP)) <= (T==nPalabrasXidioma2[IH, IP])
+(nPalabrasXidioma2[IH, IP]==running_sum_(T, group_by=IP, order_by=P))  <= getIdiomaPadre2(IH, IP, P, T)
+getIdiomaPadre2(IH, IP, P, T) <= esHijo(IP, P, IH, H) & (IP!=IH) &(T==1)
+(nPalabrasXidioma[IH, IP]==running_sum_(N2, group_by=IP, order_by=P))  <= getIdiomaPadre2(IH, IP, P, T) & (rContPalabras(IH, N) ) & (N2==100/N)
+contribucionXidioma(IH, IP, T) <=  (T==nPalabrasXidioma[IH, IP])
+```
 
 #### Análisis del resultados
 
@@ -159,9 +215,6 @@ FALTA
 | Nelson Gómez Alvarado | 100 |
 
 
-lalala
-
-[Prototype table]
 
 ## Referencias
 * Base de datos Etymological Wordnet http://www1.icsi.berkeley.edu/~demelo/etymwn/
