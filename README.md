@@ -1,13 +1,21 @@
 # Proyecto 2: Relaciones de Etimología
 
-*** Curso: *** Inteligencia Artificial
+*Curso:* Inteligencia Artificial
 
-***Tecnológico de Costa Rica***
+*Tecnológico de Costa Rica*
+
 ## Autores
 
-* **Marcello Ávila Feoli** - *Desarrollador*
-* **Stefi Falcón Chávez** - *Desarrollador*
-* **Nelson Gómez Alvarado** - *Desarrollador*
+
+
+
+|  |   |
+| --- | --- |
+| **Marcello Ávila Feoli** | *Desarrollador* |
+| **Stefi Falcón Chávez**  | *Desarrollador* |
+| **Nelson Gómez Alvarado**  | *Desarrollador* |
+
+
 
 ## Introducción
 La lógica representa un papel básico en la informática y en campos como la Inteligencia Artificial, específicamente en la creación de agentes basados en lógica. De aquí se deriva también la lógica de primer orden, que por medio de un conjunto de predicados y cuantificadores se pueden realizar inferencias.
@@ -27,7 +35,7 @@ Dicha librería requiere una instalación, cuyos pasos serán mencionados a cont
 
 * El primer requisito es tener instalado Python 3.6. Si el sistema operativo es Windows, se puede descargar el ejecutable por medio de la siguiente dirección:
 ```
-    https://www.python.org/downloads/
+  https://www.python.org/downloads/
 ```
 * Para realizar su instalación en Linux, utilizar el siguiente comando, en la terminal:
 ```
@@ -65,7 +73,7 @@ eng: war rel:has_derived_form eng: war crime
 
 Donde, eng representa el idioma inglés; war representa la palabra guerra; rel:has_derived_form, representa el el tipo de relación entre esas dos palabras; y crime, significa la palabra que se encuentra relacionada con la primera mencionada.
 
-Además existen ocho tipos distintos de relaciones para las palabras las cuales son:
+Además existen ocho tipos distintos de relaciones para las palabras, las cuales son:
 
 1. rel:derived     
 2. rel:etymologically
@@ -76,8 +84,33 @@ Además existen ocho tipos distintos de relaciones para las palabras las cuales 
 7. rel:is_derived_from
 8. rel:variant:orthography
 
+Y poseen la siguiente estructura:
+
+| Relación | Dirección |
+| --- | --- |
+| derived | Padre ➡ Hijo |
+| etymologically_related | Hijo ➡ Padre |
+| etymological_origin_of | Padre ➡ Hijo |
+| etymology | Hijo ➡ Padre |
+| has_derived_form | Padre ➡ Hijo |
+| is_derived_from | Hijo ➡ Padre |
+| variant:ortography | Hijo ➡ Padre |
+
 Dónde se descubre que las relaciones rel:etymological_origin_of y
 rel:etymology, son simétricas. Esto debido a que ambas relaciones tienen la misma cantidad de hechos, en el archivo inspeccionado. Para ser exactos: 473433 hechos.
+
+| Relación | Cantidad de registros | Contrapuesta |
+| --- | --- | --- |
+| derived | 2 | Ninguna |
+| etymologically | 1 | Ninguna |
+| etymologically_related | 538558 | Ninguna |
+| etymological_origin_of | 473433 | etymology |
+| etymology | 473433 | etymological_origin_of |
+| has_derived_form | 2264744 | is_derived_from |
+| is_derived_from | 2264744 | has_derived_form |
+| variant:orthography | 16516 | Ninguna |
+
+
 
 El mismo caso sucede con las relaciones has_derived_form y is_derived_from.
 
@@ -95,24 +128,42 @@ ask(query)
 
 Dónde query es un string que contiene un una consulta lógica, dicha función puede devolver dos tipos de valores: pyDatalog.Answer o None.
 
+###### Desarrollo de las consultas
+
+**1. Palabras hermanas:** Devuelve verdadero, si dos palabras hijas, tienen el mismo padre. Para que una palabra tenga el mismo padre de la otra, el padre en común, debe de tener el mismo nombre e idioma.
+
+```
+sonElMismo(IH1, IH2, A, B, R) <= (IH1 == IH2) & (A == B)
+sonHermanos(A, B, R) <= _getHijo(IP1, P1, IH1, A) & _getHijo (IP2, P2, IH2, B) & (sonElMismo(P1, P2, IP1, IP2, R3))  & ~(sonElMismo(IH1, IH2, A, B, R2) )
+sonHermanos(A, B) <= sonHermanos(A, B, R)
+```
+
+
+
+**2.Palabras primas:** Dos palabras se consideran primas, si los padres de ambas son hermanos.
+```
+```
+**3. Palabra hija de otra:** 
 
 #### Análisis del resultados
+
+FALTA
 
 
 #### Distribución del trabajo
 
+| Nombre | Nota |
+| --- | --- |
+| Marcello Ávila Feoli | 100 |
+| Stefi Falcón Chávez | 100 |
+| Nelson Gómez Alvarado | 100 |
 
 
+lalala
 
-## Licencia
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+[Prototype table]
 
 ## Referencias
-* Programa Estado de La Nación (2018). Distribución de juntas receptoras de votos. Recuperado de https://www.estadonacion.or.cr/files/biblioteca_virtual/otras_publicaciones/IndicadoresCantonales_Censos2000y011.xlsx
+* Base de datos Etymological Wordnet http://www1.icsi.berkeley.edu/~demelo/etymwn/
 
-* Tribunal Supremo de Elecciones República de Costa Rica (2018). 2018 Elecciones Nacionales, Resultados Provinciales. Recuperado de http://resultados2018.tse.go.cr/resultados/#/presidenciales
-
-* Tribunal Supremo de Elecciones República de Costa Rica (2018). 2018 Elecciones Nacionales, Actas de escrutinio. Recuperado de http://www.tse.go.cr/elecciones2018/actas_escrutinio.htm
-
-* Tribunal Supremo de Elecciones República de Costa Rica (2018). Distribución de juntas receptoras de votos. Recuperado de http://www.tse.go.cr/pdf/nacional2018/JRV.pdf
+* Tutorial PyDatalog https://sites.google.com/site/pydatalog/Online-datalog-tutorial
