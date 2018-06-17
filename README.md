@@ -43,6 +43,13 @@ Posteriormente a haber realizado las instalaciones necesarias, se procederá a e
 ```
 FALTA
 ```
+
+El cual desplegará la interfaz principal. Donde en en la barra de menu se tienen las opciones de Operaciones, Ayuda, Acerca de y Salir.
+En operaciones se cuenta con las operaciones principales del programa, operaciones entre palabra-palabra, palabra-idioma e idioma-idioma.
+
+![alt text](imagenesReadme/img_pantallaPrincipal.png)
+
+
 # PONER IMAGEN DE TODA LA VENTANA
 
 La ventana principal, cuenta con el panel "Relaciones a considerar", que posee un conjunto de checkboxes, que servirán para que el usuario pueda seleccionar el tipo de relación que desea utilizar durante la consulta a realizar:
