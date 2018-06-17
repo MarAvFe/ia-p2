@@ -35,16 +35,53 @@ pip install tec-0.1.zip -t <directorio>
 https://cs.rutgers.edu/~gd343/downloads/etymwn-20130208.zip
 ```
 
-### Manual de usuario
-# FALTA: poner capturas de pantalla para cada operación
+## Manual de usuario
+El primer paso a realizar, es seguir las instrucciones del apartado "Instalación", del presente documento.
 
+Posteriormente a haber realizado las instalaciones necesarias, se procederá a ejecutar el programa, por medio de la siguiente instrucción:
 
-### Detalles de implementación y diseño
+```
+FALTA
+```
+# PONER IMAGEN DE TODA LA VENTANA
 
-#### Interfaz gráfica
+La ventana principal, cuenta con el panel "Relaciones a considerar", que posee un conjunto de checkboxes, que servirán para que el usuario pueda seleccionar el tipo de relación que desea utilizar durante la consulta a realizar:
+
+![alt text](imagenesReadme/img_relaciones.png)
+
+Al lado izquierdo de la ventana, se encontrarán dos casillas de texto. El usuario deberá de introducir las palabras a comparar:
+
+![Alt text](imagenesReadme/img_campoTexto.png)
+
+Ahora, el usuario debe seleccionar la operación que desea ejecutar. Para ello, deberá de seleccionarla de la siguiente lista:
+
+![Alt text](imagenesReadme/img_opciones.png)
+
+Por último, el usuario debe de oprimir el botón "Ejecutar":
+
+![Alt text](imagenesReadme/img_botonEjecutar.png)
+
+Después de realizar los pasos previamente descritos, al lado derecho de la ventana, se muestran dos paneles: uno de ellos mostrará los resultados de la consulta; y en el otro, se podrá ver todas las relaciones entre palabras realizadas para poder llegar a dicho resultado.
+
+En la parte superior derecha de la ventana, se encontrarán dos opciones:
+"Todos los detalles de ruta" y "Ruta resumida". La primera opción, muestra de manera extendida las relaciones que se hicieron entre todas las palabras para poder llegar a un resultado. La segunda, mostrará un resumen de las mismas:
+
+ ![Alt text](imagenesReadme/img_rutaOpciones.png)
+
+Panel en el que se muestran las relaciones elaboradas para llegar a un resultado:
+
+![Alt text](imagenesReadme/img_ruta.png)
+
+En la parte inferior derecha de la pantalla se encontrará el campo de texto en el cual se mostrará la respuesta a la consulta:
+
+![Alt text](imagenesReadme/img_resultado.png)
+
+## Detalles de implementación y diseño
+
+### Interfaz gráfica
 Para la implementación de la interfaz de usuario, se utilizó TkInter que es un estándar para la interfaz gráfica de un usuario para Python.
 
-#### Manejo de los datos
+### Manejo de los datos
 La base de datos a manipular contiene el siguiente formato:
 
 ```
@@ -103,7 +140,7 @@ Así, para realizar la carga de datos y hechos en la base de conocimiento se tom
 
 # * FALTA
 
-#### Consultas
+### Consultas
 
 Las consultas son realizadas utilizando la función ask de pyDatalog.
 ```
@@ -113,7 +150,8 @@ ask(query)
 
 Dónde query es un string que contiene  una consulta lógica, dicha función puede devolver dos tipos de valores: pyDatalog.Answer o None.
 
-###### Desarrollo de las consultas
+#### Desarrollo de las consultas
+A continuación, se describirá el funcionamiento de cada una de las consultas elaboradas en PyDatalog:
 
 **1. Palabras hermanas:** Devuelve verdadero, si dos palabras hijas, tienen el mismo padre. Para que una palabra tenga el mismo padre de la otra, el padre en común, debe de tener el mismo nombre e idioma.
 
@@ -122,8 +160,6 @@ sonElMismo(IH1, IH2, A, B, R) <= (IH1 == IH2) & (A == B)
 sonHermanos(A, B, R) <= _getHijo(IP1, P1, IH1, A) & _getHijo (IP2, P2, IH2, B) & (sonElMismo(P1, P2, IP1, IP2, R3))  & ~(sonElMismo(IH1, IH2, A, B, R2) )
 sonHermanos(A, B) <= sonHermanos(A, B, R)
 ```
-
-
 
 **2. Palabras primas:** Dos palabras se consideran primas, si los padres de ambas son hermanos.
 ```
@@ -155,7 +191,6 @@ gradoPrimos(P1, P2, G) <= sonPrimos(P1, P2, G)
 **6. Determinar si una palabra está relacionada con un idioma:** La lógica de esta consulta consiste en utilizando la palabra hija, obtener todos sus descendientes y ancestros, y verificar si es que alguno de estos coincide con el idioma de la búsqueda.
 
 ```
-
 getHijos2(P, IH, H) <= esHijo(IP, P, IH, H)
 descendientes(P, I, R) <= getHijos2 (P, I, R)
 descendientes(P, I, R) <= getHijos2 (P, R_IH, R_H) & descendientes(R_H, I, R)
@@ -206,12 +241,12 @@ getIdiomaPadre2(IH, IP, P, T) <= esHijo(IP, P, IH, H) & (IP!=IH) &(T==1)
 contribucionXidioma(IH, IP, T) <=  (T==nPalabrasXidioma[IH, IP])
 ```
 
-#### Análisis del resultados
+## Análisis del resultados
 
 # FALTA
 
 
-#### Distribución del trabajo
+## Distribución del trabajo
 
 | Nombre | Nota |
 | --- | --- |
