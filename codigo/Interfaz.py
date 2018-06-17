@@ -52,7 +52,6 @@ def var_states(derived,ety,related,origin,etymology,form,rel_from,ortho):
     print(form.get())
     print(rel_from.get())
     print(ortho.get())
-    #print("Aquí deberia llamar a la funcion de marcello con la variable.get()")
     bk.cargarRelaciones(derived.get(),ety.get(),related.get(),origin.get(),etymology.get(),form.get(),rel_from.get(),ortho.get())
 
 
