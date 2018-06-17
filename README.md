@@ -1,21 +1,6 @@
 # Proyecto 2: Relaciones de Etimología
 
-*Curso:* Inteligencia Artificial
-
-*Tecnológico de Costa Rica*
-
-## Autores
-
-
-
-
-|  |   |
-| --- | --- |
-| **Marcello Ávila Feoli** | *Desarrollador* |
-| **Stefi Falcón Chávez**  | *Desarrollador* |
-| **Nelson Gómez Alvarado**  | *Desarrollador* |
-
-
+*Marcello Ávila, Stefi Falcón, Nelson Gómez* | Inteligencia Artificial -  Tecnológico de Costa Rica
 
 ## Introducción
 La lógica representa un papel básico en la informática y en campos como la Inteligencia Artificial, específicamente en la creación de agentes basados en lógica. De aquí se deriva también la lógica de primer orden, que por medio de un conjunto de predicados y cuantificadores se pueden realizar inferencias.
@@ -116,7 +101,7 @@ El mismo caso sucede con las relaciones has_derived_form y is_derived_from.
 
 Así, para realizar la carga de datos y hechos en la base de conocimiento se tomaron las siguientes decisiones:
 
-* FALTA
+# * FALTA
 
 #### Consultas
 
@@ -142,33 +127,53 @@ sonHermanos(A, B) <= sonHermanos(A, B, R)
 
 **2. Palabras primas:** Dos palabras se consideran primas, si los padres de ambas son hermanos.
 ```
+sonPrimos(P1, P2, G, True) <= sonPrimos(P1, P2, G )
+sonPrimos(P1, P2, 0, False) <= ~sonPrimos(P1, P2, G)
+sonPrimos(P1, P2, G) <= esHijo(P1, PP1) & esHijo(P2, PP2) & sonHermanos(PP1, PP2) & (G==1)
+sonPrimos(P1, P2, G) <= esHijo(P1, PP1) & esHijo(P2, PP2) & ~sonHermanos(PP1, PP2) & sonPrimos(PP1, PP2, G1) & (G==G1+1)
+sonPrimas(P1, P2) <= sonPrimos(P1, P2, G)
 ```
 **3. Palabra hija de otra:** Esta búsqueda devuelve verdadero al buscar el padre de la supuesta hija, y que este último sea igual que el supuesto padre (palabra e idioma de la palabra padre).
 
 ```
+esHijo(H, P) <= esHijo(IP, P, IH, H)
+esHijo(H, P, R) <= esHijo(IP, P, IH, H) & ~sonElMismo(IP, IH, P, H, X)
 ```
 
 **4. Palabra tía de otra :** Para determinar si una palabra es tía de otra, lo primero es determinar el padre de la supuesta palabra sobrina, y el padre de este último; y con esto, se deterina si el tío y el padre de la palabra sobrina, son hermanos. Si esta última condición se cumple, la respuesta será verdadera; en caso contrario, falsa.
 
 ```
+esTio(T, S, R) <= esHijo(S, P) & sonHermanos(T, P) & (P!=T)
+getPadre(H, I)<=esHijo(IP, P, IH, H)
 ```
 
 **5. Grado de prima:** Esta función retornará el grado de parentesco que tienen dos palabras primas. Para su desarrollo, se utilizó recursividad, mediante la cuál se logró implementar un contador que almacena el grado en que dos palabras son primas.
 
 ```
+gradoPrimos(P1, P2, G) <= sonPrimos(P1, P2, G)
 ```
 **6. Determinar si una palabra está relacionada con un idioma:** La lógica de esta consulta consiste en utilizando la palabra hija, obtener todos sus descendientes y ancestros, y verificar si es que alguno de estos coincide con el idioma de la búsqueda.
 
 ```
+
+getHijos2(P, IH, H) <= esHijo(IP, P, IH, H)
+descendientes(P, I, R) <= getHijos2 (P, I, R)
+descendientes(P, I, R) <= getHijos2 (P, R_IH, R_H) & descendientes(R_H, I, R)
+getPadres2(H, IP, P) <= esHijo(IP, P, IH, H)
+ascendencia(H, I, R) <= getPadres2(H, I, R)
+ascendencia(H, I, R) <= getPadres2(H, R_IP, R_P) & ascendencia(R_P, I, R)
 ```
 **7. Obtener el conjunto de todas las palabras en un idioma originadas por una palabra específica:** Consulta similar a la número seis. Se buscan todos los descendientes y ancestros de una palabra y se retorna dicho resultado.
 
 ```
+getHijosI(P, H, IH) <= esHijo(IP, P, IH, H)
+hijosIdioma(P, IH, H) <= getHijosI(P, H, IH)
+hijosIdioma(P, IH, R) <= getHijosI(P, H, IH) & hijosIdioma(H, IH, R)
 ```
 **8. Listar los idiomas relacionados con una palabra:** Esta consulta es una extensión de la consulta siete. La variación que presenta es que se devuelven solo los idiomas obtenidos.
 
 ```
-
+_soloIdiomas(P, I)<=_antepasados(P, I, R)
 ```
 **9. Contar las palabras comunes entre dos idiomas:** Consulta derivada de la consulta número diez, se utiliza la función len_ para obtener el número de palabras comunes entre dos idiomas.
 
@@ -203,7 +208,7 @@ contribucionXidioma(IH, IP, T) <=  (T==nPalabrasXidioma[IH, IP])
 
 #### Análisis del resultados
 
-FALTA
+# FALTA
 
 
 #### Distribución del trabajo
