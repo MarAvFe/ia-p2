@@ -105,13 +105,13 @@ Así, para realizar la carga de datos y hechos en la base de conocimiento se tom
 
 #### Consultas
 
-Las consultas son realizadas a partir de la función ask de pyDatalog.
+Las consultas son realizadas utilizando la función ask de pyDatalog.
 ```
 ask(query)
 ```
 
 
-Dónde query es un string que contiene un una consulta lógica, dicha función puede devolver dos tipos de valores: pyDatalog.Answer o None.
+Dónde query es un string que contiene  una consulta lógica, dicha función puede devolver dos tipos de valores: pyDatalog.Answer o None.
 
 ###### Desarrollo de las consultas
 
