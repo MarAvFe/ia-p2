@@ -47,7 +47,11 @@ py Interfaz.py
 El cual desplegará la interfaz principal. Donde en en la barra de menu se tienen las opciones de Operaciones, Ayuda, Acerca de y Salir.
 En operaciones se cuenta con las operaciones principales del programa, operaciones entre palabra-palabra, palabra-idioma e idioma-idioma.
 
-![alt text](imagenesReadme/img_pantallaPrincipal.png)
+![alt text](imagenesReadme/vp.png)
+
+Luego, una vez seleccionada una opción, se desplegarán todos los wigets según la operación seleccionada.
+
+![alt text](imagenesReadme/vWigets.png.png)
 
 
 La ventana principal, cuenta con el panel "Relaciones a considerar", que posee un conjunto de checkboxes, que servirán para que el usuario pueda seleccionar el tipo de relación que desea utilizar durante la consulta a realizar:
@@ -84,7 +88,7 @@ En la parte inferior derecha de la pantalla se encontrará el campo de texto en 
 ## Detalles de implementación y diseño
 
 ### Interfaz gráfica
-Para la implementación de la interfaz de usuario, se utilizó TkInter que es un estándar para la interfaz gráfica de un usuario para Python.
+Para la implementación de la interfaz de usuario, se utilizó TkInter que es una librería estandar y multiplataforma para el desarrollo de interfaz grafica de usuario para Python.
 
 Como se observa en las imagenes anteriores la interfaz está divida en 3 secciones principales. Primero se tiene el panel de control, luego la ventana superior que muestra la ruta de la inferencia generada segun la consulta realizada y por último se tiene la ventana inferior, que corresponde al campo donde se mostrará el resultado final. 
 
@@ -94,14 +98,14 @@ La ventana principal cuenta con un menuBar, dónde en una de las operaciones se 
 
 Como se puede observar, según la opción todos los wigets se dibujan en la ventana root, lo cual implica que no se crearan ventanas extra. 
 
-Un punto importante a destacar, es el listener con el que cuentan los checkbox del panel en la parte superior, cada vez que uno de los checkbox es marcado o desmarcado, se hace un llamado al a función var_states(), que básicamente hace un llamado para cargar o quitar las relaciones en la base.
+Un punto importante a destacar, es el listener con el que cuentan los checkbox del panel en la parte superior, cada vez que uno de los checkbox es marcado o desmarcado, se hace un llamado al a función var_states(), que básicamente se hace un llamado para cargar o quitar las relaciones a considerar durante la consulta.
 Como se puede observar en la siguiente imagen, los parámetros que recibe dicha función es un valor booleando de si el checkbox está marcado o no, que será exactamente el dato que se le enviará a la función de cargar relaciones.
 
 
 ![Alt text](imagenesReadme/var_states_funcion.png)
 
 
-El llamado a la ejecución de la consulta especifica es otro punto importante en la interfaz gráfica. Primero que nada se capturan los valores seleccionados por el usuario dentro de variables, luego las variables son enviadas a una funcion llamada run_query, dónde básicamente primero verifica si viene de la opción palabra-palabra, palabra-idioma o idioma-idioma, luego verifica qué opción fue elegida en el comboBox, para llamar a la función específica y por último hace el llamado a la función según corresponda.
+El llamado a la ejecución de la consulta especifica es otro punto importante en la interfaz gráfica. Primero que nada se capturan los valores seleccionados por el usuario dentro de variables, luego las variables son enviadas a una funcion llamada run_query, dónde básicamente primero verifica si viene de la opción palabra-palabra, palabra-idioma o idioma-idioma, luego verifica qué opción fue elegida en el comboBox para llamar a la función específica y por último hace el llamado a la función según corresponda.
 Como se observa en la siguiente imagen, si una persona ingresa a la operación de palabra-palabra, completa los datos, selecciona en el combobox la opción A (que corresponde al a operación de saber si 2 palabras son hermanas) y ejecuta la consulta, el programa ingresaría a la siguiente sección de código donde se hace el llamado a la función de hermanas. El dato que se le envia son los 2 strings escritos por le usuario.
 
 ![Alt text](imagenesReadme/llama_hermanas.png)
