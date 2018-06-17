@@ -49,7 +49,6 @@ En operaciones se cuenta con las operaciones principales del programa, operacion
 
 ![alt text](imagenesReadme/img_pantallaPrincipal.png)
 
-
 # PONER IMAGEN DE TODA LA VENTANA
 
 La ventana principal, cuenta con el panel "Relaciones a considerar", que posee un conjunto de checkboxes, que servirán para que el usuario pueda seleccionar el tipo de relación que desea utilizar durante la consulta a realizar:
