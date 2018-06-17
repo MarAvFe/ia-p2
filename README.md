@@ -86,6 +86,27 @@ En la parte inferior derecha de la pantalla se encontrará el campo de texto en 
 ### Interfaz gráfica
 Para la implementación de la interfaz de usuario, se utilizó TkInter que es un estándar para la interfaz gráfica de un usuario para Python.
 
+Como se observa en las imagenes anteriores la interfaz está divida en 3 secciones principales. Primero se tiene el panel de control, luego la ventana superior que muestra la ruta de la inferencia generada segun la consulta realizada y por último se tiene la ventana inferior, que corresponde al campo donde se mostrará el resultado final. 
+
+La ventana principal cuenta con un menuBar, dónde en una de las operaciones se puede elegir si se desea realizar una consulta entre palabra-palabra, palabra-idioma o idioma-idioma. Una vez una opción es elegida se llama la función respectiva que dibuja los checkboxs, entrys, textFields según las opciones de la operación.
+
+![Alt text](imagenesReadme/funcion_palabra_idioma.png)
+
+Como se puede observar, según la opción todos los wigets se dibujan en la ventana root, lo cual implica que no se crearan ventanas extra. 
+
+Un punto importante a destacar, es el listener con el que cuentan los checkbox del panel en la parte superior, cada vez que uno de los checkbox es marcado o desmarcado, se hace un llamado al a función var_states(), que básicamente hace un llamado para cargar o quitar las relaciones en la base.
+Como se puede observar en la siguiente imagen, los parámetros que recibe dicha función es un valor booleando de si el checkbox está marcado o no, que será exactamente el dato que se le enviará a la función de cargar relaciones.
+
+
+![Alt text](imagenesReadme/var_states_funcion.png)
+
+
+El llamado a la ejecución de la consulta especifica es otro punto importante en la interfaz gráfica. Primero que nada se capturan los valores seleccionados por el usuario dentro de variables, luego las variables son enviadas a una funcion llamada run_query, dónde básicamente primero verifica si viene de la opción palabra-palabra, palabra-idioma o idioma-idioma, luego verifica qué opción fue elegida en el comboBox, para llamar a la función específica y por último hace el llamado a la función según corresponda.
+Como se observa en la siguiente imagen, si una persona ingresa a la operación de palabra-palabra, completa los datos, selecciona en el combobox la opción A (que corresponde al a operación de saber si 2 palabras son hermanas) y ejecuta la consulta, el programa ingresaría a la siguiente sección de código donde se hace el llamado a la función de hermanas. El dato que se le envia son los 2 strings escritos por le usuario.
+
+![Alt text](imagenesReadme/llama_hermanas.png)
+
+
 ### Manejo de los datos
 La base de datos a manipular contiene el siguiente formato:
 
