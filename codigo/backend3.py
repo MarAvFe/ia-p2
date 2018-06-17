@@ -262,7 +262,7 @@ def loadDBRels():
 	threads = []
 	saved = 0
 	global DATABASE
-	with open(DATABASE) as f:
+	with open(DATABASE, encoding="utf-8") as f:
 		i = 0
 		for l in f:
 			tmp = l.split("\t")
