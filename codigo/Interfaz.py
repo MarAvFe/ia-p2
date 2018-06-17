@@ -1,14 +1,47 @@
 import tkinter
+import logging
+from pyDatalog import pyEngine, Logic
 from tkinter import *
 import tkinter.ttk as TTK
 import tkinter.scrolledtext as tkst
 
-import backend as bk
+import backend3 as bk
+
+#pyEngine.Logging = True
+#logging.basicConfig(level=logging.INFO)
+
+pyEngine.Logging = True
+
+try:
+    from cStringIO import StringIO      # Python 2
+except ImportError:
+    from io import StringIO
+
+log_stream = StringIO()    
+logging.basicConfig(stream=log_stream,level=logging.INFO)
+# logging.info('hello world')
+# logging.warning('be careful!')
+# logging.debug("you won't see this")
+# logging.error('you will see this')
+# logging.critical('critical is logged too!')
+# print(log_stream.getvalue())
+
 
 
 def hello():
     print("Hola mundo")
 
+
+def printTextos(listaResultado, textPath, varPrint):
+    print(varPrint.get())
+    if(varPrint.get()==1):
+        for i in listaResultado:
+            textPath.insert(INSERT,i[33:] + '\n')
+    else:
+        for i in listaResultado:
+            if("esHijo" in i):
+                textPath.insert(INSERT,i[33:] + '\n')
+    
 
 def var_states(derived,ety,related,origin,etymology,form,rel_from,ortho):
     print(derived.get())
@@ -20,13 +53,12 @@ def var_states(derived,ety,related,origin,etymology,form,rel_from,ortho):
     print(rel_from.get())
     print(ortho.get())
     #print("Aquí deberia llamar a la funcion de marcello con la variable.get()")
-
     bk.cargarRelaciones(derived.get(),ety.get(),related.get(),origin.get(),etymology.get(),form.get(),rel_from.get(),ortho.get())
 
 
-def run_query(tipoQuery,entry1,entry2,opcion):
-    print("Dato de query 1 es: %s" % entry1.get())
-    print("Dato de query 2 es: %s" % entry2.get())
+def run_query(tipoQuery,entry1,entry2,opcion,textPath,textResult,varPrint):
+    print("Dato de text1 es: %s" % entry1.get())
+    print("Dato de text2 es: %s" % entry2.get())
     print("El query es %s" % opcion.get())
 
     letraOpcion = opcion.get()
@@ -36,37 +68,110 @@ def run_query(tipoQuery,entry1,entry2,opcion):
     if (tipoQuery=="palabra_palabra"):
         print("es del tipo palabra_palabra")
         if(letraOpcion[0]=="A"):
-            bk.__sonHermanos(string1,string2)
+            resultado = bk.__sonHermanos(string1,string2)
+            #imprime resultado
+            textResult.insert(INSERT,resultado)
+            #split al log_stream
+            listaResultado = log_stream.getvalue().splitlines()
+            #verifica si debe imprimir todo o resumido
+            printTextos(listaResultado,textPath,varPrint)
+
         elif(letraOpcion[0]=="B"):
-            bk.__sonPrimas(string1,string2)
+            resultado = bk.__sonPrimas(string1,string2)
+            #imprime resultado
+            textResult.insert(INSERT,resultado)
+            #split al log_stream
+            listaResultado = log_stream.getvalue().splitlines()
+            #verifica si debe imprimir todo o resumido
+            printTextos(listaResultado,textPath,varPrint)
+            
         elif(letraOpcion[0]=="C"):
-            bk.__esHija(string1,string2)
+            resultado = bk.__esHija(string1,string2)
+            #imprime resultado
+            textResult.insert(INSERT,resultado)
+            #split al log_stream
+            listaResultado = log_stream.getvalue().splitlines()
+            #verifica si debe imprimir todo o resumido
+            printTextos(listaResultado,textPath,varPrint)
         elif(letraOpcion[0]=="D"):
-            bk.__esTia(string1,string2)
+            resultado = bk.__esTia(string1,string2)
+            #imprime resultado
+            textResult.insert(INSERT,resultado)
+            #split al log_stream
+            listaResultado = log_stream.getvalue().splitlines()
+            #verifica si debe imprimir todo o resumido
+            printTextos(listaResultado,textPath,varPrint)
+            
         elif(letraOpcion[0]=="E"):
-            bk.__gradoPrimas(string1,string2)
+            resultado = bk.__gradoPrimas(string1,string2)
+            #imprime resultado
+            textResult.insert(INSERT,resultado)
+            #split al log_stream
+            listaResultado = log_stream.getvalue().splitlines()
+            #verifica si debe imprimir todo o resumido
+            printTextos(listaResultado,textPath,varPrint)
 
     if(tipoQuery=="palabra_idioma"):
         print("es del tipo palabra_idioma")
         if(letraOpcion[0]=="A"):
-            print(letraOpcion[0])
-            print("entra aqui mae")
-            bk.__esPalabraRelacionadaIdioma(string1,string2)
+            resultado = bk.__esPalabraRelacionadaIdioma(string1,string2)
+            #imprime resultado
+            textResult.insert(INSERT,resultado)
+            #split al log_stream
+            listaResultado = log_stream.getvalue().splitlines()
+            #verifica si debe imprimir todo o resumido
+            printTextos(listaResultado,textPath,varPrint)
         elif(letraOpcion[0]=="B"):
-            bk.__palabrasEnUnIdiomaOriginadasPorPalabra(string1,string2)
+            resultado = bk.__palabrasEnUnIdiomaOriginadasPorPalabra(string1,string2)
+            #imprime resultado
+            textResult.insert(INSERT,resultado)
+            #split al log_stream
+            listaResultado = log_stream.getvalue().splitlines()
+            #verifica si debe imprimir todo o resumido
+            printTextos(listaResultado,textPath,varPrint)
         elif(letraOpcion[0]=="C"):
-            bk.__idiomasRelacionadosPalabra(string1,string2)
+            resultado = bk.__idiomasRelacionadosPalabra(string1,string2)
+            #imprime resultado
+            textResult.insert(INSERT,resultado)
+            #split al log_stream
+            listaResultado = log_stream.getvalue().splitlines()
+            #verifica si debe imprimir todo o resumido
+            printTextos(listaResultado,textPath,varPrint)
         
     if(tipoQuery=="idioma_idioma"):
         print("es del tipo idioma_idioma")
         if(letraOpcion[0]=="A"):
-            bk.__numeroPalabrasComunesIdiomas(string1,string2)
+            resultado = bk.__numeroPalabrasComunesIdiomas(string1,string2)
+            #imprime resultado
+            textResult.insert(INSERT,resultado)
+            #split al log_stream
+            listaResultado = log_stream.getvalue().splitlines()
+            #verifica si debe imprimir todo o resumido
+            printTextos(listaResultado,textPath,varPrint)
         elif(letraOpcion[0]=="B"):
-            bk.__listarPalabrasComunesIdiomas(string1,string2)
+            resultado = bk.__listarPalabrasComunesIdiomas(string1,string2)
+            #imprime resultado
+            textResult.insert(INSERT,resultado)
+            #split al log_stream
+            listaResultado = log_stream.getvalue().splitlines()
+            #verifica si debe imprimir todo o resumido
+            printTextos(listaResultado,textPath,varPrint)
         elif(letraOpcion[0]=="C"):
-            bk.__idiomaMasAporto(string1,string2)
+            resultado = bk.__idiomaMasAporto(string1,string2)
+            #imprime resultado
+            textResult.insert(INSERT,resultado)
+            #split al log_stream
+            listaResultado = log_stream.getvalue().splitlines()
+            #verifica si debe imprimir todo o resumido
+            printTextos(listaResultado,textPath,varPrint)
         elif(letraOpcion[0]=="D"):
-            bk.__listarIdiomasAportaronOtro(string1,string2)
+            resultado = bk.__listarIdiomasAportaronOtro(string1,string2)
+            #imprime resultado
+            textResult.insert(INSERT,resultado)
+            #split al log_stream
+            listaResultado = log_stream.getvalue().splitlines()
+            #verifica si debe imprimir todo o resumido
+            printTextos(listaResultado,textPath,varPrint)
 
 def salir():
     root.destroy()
@@ -113,6 +218,7 @@ def carga_opciones(root):
     checkBox_ortho.place(x=30,y=170)
 
 
+
 def palabra_palabra(root):
     print("Palabra-Palabra")
     #window=tkinter.Tk()
@@ -122,7 +228,7 @@ def palabra_palabra(root):
     frameWigets = Frame(root,width=200,height=400 ,bg="cornsilk2")
     frameWigets.place(x=0,y=200)
 
-    frameTexto = Frame(root,width=500,height=600 ,bg="gray91")
+    frameTexto = Frame(root,width=980,height=600 ,bg="gray91")
     frameTexto.place(x=200,y=0)
     #Checkbox
 
@@ -153,21 +259,25 @@ def palabra_palabra(root):
     menuOpciones = TTK.Combobox(frameWigets,values=("A: Hermanas", "B: Primas", "C: Hija 1 de 2","D: Tia 1 de 2","E: Primas con grado"), width=30, textvariable=varCombo)
     menuOpciones.place(x=0,y=240)
 
-    #TextField
-    #text=tkst.ScrolledText(frameTexto,width=60,height=37)
-    #text.pack()
 
-    tree = TTK.Treeview(frameTexto)
+    #print Options
+    varPrint = IntVar()
+    R1 = Radiobutton(frameTexto, text="Todos los detalles de ruta", variable=varPrint, value=1)
+    R1.place(x=15,y=0)
 
-    tree.insert("",END,text="Nelson")
-    item = tree.insert("",0,text="Elemento1")
-    subItem = tree.insert(item, END, text = "Subelemento1")
-    a = "japones"
-    tree.insert(subItem,END, text = "elemento 3", iid=a)
-    tree.insert(a,END,text ="kulingao")
-    tree.pack() 
+    R2 = Radiobutton(frameTexto, text="Ruta resumida", variable=varPrint, value=2)
+    R2.select()
+    R2.place(x=15,y=30)
+
+    #TextField_path
+    textPath=tkst.ScrolledText(frameTexto,width=120,height=21)
+    textPath.place(x=0,y=60)
+
+    #TextField_result
+    textResult=tkst.ScrolledText(frameTexto,width=120,height=10)
+    textResult.place(x=0,y=420)
     
-    botonEjecutar=Button(frameWigets,width=28,height=2, text="Ejecutar",bg="dodger blue", command= lambda: run_query("palabra_palabra",varEntry1,varEntry2,varCombo))
+    botonEjecutar=Button(frameWigets,width=28,height=2, text="Ejecutar",bg="dodger blue", command= lambda: run_query("palabra_palabra",varEntry1,varEntry2,varCombo,textPath,textResult,varPrint))
     botonEjecutar.place(x=0,y=300)
     
     root.mainloop()
@@ -208,23 +318,24 @@ def palabra_idioma(root):
     menuOpciones = TTK.Combobox(frameWigets,values=("A: 1 Relacionada con 2", "B: Conjunto de todas las palabras originadas en 2", "C: Listar idiomas relacionados con la 1"), width=30, textvariable=varCombo)
     menuOpciones.place(x=0,y=240)
 
-    #TextField
-    #text=tkst.ScrolledText(frameTexto,width=60,height=37)
-    #text.pack()
+    #print Options
+    varPrint = IntVar()
+    R1 = Radiobutton(frameTexto, text="Todos los detalles de ruta", variable=varPrint, value=1)
+    R1.place(x=15,y=0)
 
-    tree = TTK.Treeview(frameTexto)
+    R2 = Radiobutton(frameTexto, text="Ruta resumida", variable=varPrint, value=2)
+    R2.select()
+    R2.place(x=15,y=30)
 
-    tree.insert("",END,text="Nelson")
-    item = tree.insert("",0,text="Elemento1")
-    subItem = tree.insert(item, END, text = "Subelemento1")
+    #TextField_path
+    textPath=tkst.ScrolledText(frameTexto,width=120,height=21)
+    textPath.place(x=0,y=60)
 
-    a = "japones"
-    tree.insert(subItem,END, text = "elemento 3", iid=a)
-    tree.insert(a,END,text ="kulingao")
+    #TextField_result
+    textResult=tkst.ScrolledText(frameTexto,width=120,height=10)
+    textResult.place(x=0,y=420)
 
-    tree.pack() 
-
-    botonEjecutar=Button(frameWigets,width=28,height=2, text="Ejecutar",bg="dodger blue", command= lambda: run_query("palabra_idioma",varEntry1,varEntry2,varCombo))
+    botonEjecutar=Button(frameWigets,width=28,height=2, text="Ejecutar",bg="dodger blue", command= lambda: run_query("palabra_idioma",varEntry1,varEntry2,varCombo,textPath,textResult,varPrint))
     botonEjecutar.place(x=0,y=300)
     
     root.mainloop()
@@ -264,31 +375,33 @@ def idioma_idioma(root):
     menuOpciones = TTK.Combobox(frameWigets,values=("A: Contar palabras comunes", "B: Listar palabras comunes", "C: Idioma que mas aporto a otro (%)","D: Listar idiomas que aportaron a otro"), width=30, textvariable=varCombo)
     menuOpciones.place(x=0,y=240)
 
-    botonEjecutar=Button(frameWigets,width=28,height=2, text="Ejecutar",bg="dodger blue", command= lambda: run_query("idioma_idioma",varEntry1,varEntry2,varCombo))
+    #print Options
+    varPrint = IntVar()
+    R1 = Radiobutton(frameTexto, text="Todos los detalles de ruta", variable=varPrint, value=1)
+    R1.place(x=15,y=0)
+
+    R2 = Radiobutton(frameTexto, text="Ruta resumida", variable=varPrint, value=2)
+    R2.select()
+    R2.place(x=15,y=30)
+
+    #TextField_path
+    textPath=tkst.ScrolledText(frameTexto,width=120,height=21)
+    textPath.place(x=0,y=60)
+
+    #TextField_result
+    textResult=tkst.ScrolledText(frameTexto,width=120,height=10)
+    textResult.place(x=0,y=420)
+
+    botonEjecutar=Button(frameWigets,width=28,height=2, text="Ejecutar",bg="dodger blue", command= lambda: run_query("idioma_idioma",varEntry1,varEntry2,varCombo,textPath,textResult,varPrint))
     botonEjecutar.place(x=0,y=300)
-
-    #TextField
-    #text=tkst.ScrolledText(frameTexto,width=60,height=37)
-    #text.pack()
-    
-    tree = TTK.Treeview(frameTexto)
-
-    tree.insert("",END,text="Nelson")
-    item = tree.insert("",0,text="Elemento1")
-    subItem = tree.insert(item, END, text = "Subelemento1")
-
-    a = "japones"
-    tree.insert(subItem,END, text = "elemento 3", iid=a)
-    tree.insert(a,END,text ="kulingao")
-
-    tree.pack()    
+     
     root.mainloop()
     
 
 
 root = tkinter.Tk()
 root.title("Descubre el origen de las palabras...")
-root.geometry("700x600+100+50")
+root.geometry("1200x600+100+50")
  
 menubar = Menu(root)
 
