@@ -57,6 +57,8 @@ def var_states(derived,ety,related,origin,etymology,form,rel_from,ortho):
 
 
 def run_query(tipoQuery,entry1,entry2,opcion,textPath,textResult,varPrint):
+    textPath.delete('1.0', END)
+    textResult.delete('1.0', END)
     print("Dato de text1 es: %s" % entry1.get())
     print("Dato de text2 es: %s" % entry2.get())
     print("El query es %s" % opcion.get())
@@ -130,7 +132,7 @@ def run_query(tipoQuery,entry1,entry2,opcion,textPath,textResult,varPrint):
             #verifica si debe imprimir todo o resumido
             printTextos(listaResultado,textPath,varPrint)
         elif(letraOpcion[0]=="C"):
-            resultado = bk.__idiomasRelacionadosPalabra(string1,string2)
+            resultado = bk.__idiomasRelacionadosPalabra(string1)
             #imprime resultado
             textResult.insert(INSERT,resultado)
             #split al log_stream
@@ -151,13 +153,14 @@ def run_query(tipoQuery,entry1,entry2,opcion,textPath,textResult,varPrint):
         elif(letraOpcion[0]=="B"):
             resultado = bk.__listarPalabrasComunesIdiomas(string1,string2)
             #imprime resultado
-            textResult.insert(INSERT,resultado)
+            for j in resultado:
+                textResult.insert(INSERT,j+'\n')
             #split al log_stream
             listaResultado = log_stream.getvalue().splitlines()
             #verifica si debe imprimir todo o resumido
             printTextos(listaResultado,textPath,varPrint)
         elif(letraOpcion[0]=="C"):
-            resultado = bk.__idiomaMasAporto(string1,string2)
+            resultado = bk.__idiomaMasAporto(string1)
             #imprime resultado
             textResult.insert(INSERT,resultado)
             #split al log_stream
@@ -165,7 +168,7 @@ def run_query(tipoQuery,entry1,entry2,opcion,textPath,textResult,varPrint):
             #verifica si debe imprimir todo o resumido
             printTextos(listaResultado,textPath,varPrint)
         elif(letraOpcion[0]=="D"):
-            resultado = bk.__listarIdiomasAportaronOtro(string1,string2)
+            resultado = bk.__listarIdiomasAportaronOtro(string1)
             #imprime resultado
             textResult.insert(INSERT,resultado)
             #split al log_stream
@@ -289,7 +292,7 @@ def palabra_idioma(root):
     frameWigets = Frame(root,width=200,height=400 ,bg="cornsilk2")
     frameWigets.place(x=0,y=200)
 
-    frameTexto = Frame(root,width=500,height=600 ,bg="gray91")
+    frameTexto = Frame(root,width=980,height=600 ,bg="gray91")
     frameTexto.place(x=200,y=0)
 
     carga_opciones(root)
@@ -315,7 +318,7 @@ def palabra_idioma(root):
     labelPalabra1.place(x=0,y=200)
 
     varCombo = StringVar()
-    menuOpciones = TTK.Combobox(frameWigets,values=("A: 1 Relacionada con 2", "B: Conjunto de todas las palabras originadas en 2", "C: Listar idiomas relacionados con la 1"), width=30, textvariable=varCombo)
+    menuOpciones = TTK.Combobox(frameWigets,values=("A: 1 Relacionada con 2", "B: Conjunto de todas las palabras en un idioma originadas por la palabra", "C: Listar idiomas relacionados con la palabra"), width=30, textvariable=varCombo)
     menuOpciones.place(x=0,y=240)
 
     #print Options
@@ -346,7 +349,7 @@ def idioma_idioma(root):
     frameWigets = Frame(root,width=200,height=400 ,bg="cornsilk2")
     frameWigets.place(x=0,y=200)
 
-    frameTexto = Frame(root,width=500,height=600 ,bg="gray91")
+    frameTexto = Frame(root,width=980,height=600 ,bg="gray91")
     frameTexto.place(x=200,y=0)
 
     carga_opciones(root)
@@ -372,7 +375,7 @@ def idioma_idioma(root):
     labelPalabra1.place(x=0,y=200)
 
     varCombo = StringVar()
-    menuOpciones = TTK.Combobox(frameWigets,values=("A: Contar palabras comunes", "B: Listar palabras comunes", "C: Idioma que mas aporto a otro (%)","D: Listar idiomas que aportaron a otro"), width=30, textvariable=varCombo)
+    menuOpciones = TTK.Combobox(frameWigets,values=("A: Contar palabras comunes", "B: Listar palabras comunes", "C: Idioma que mas aporto a otro (%)","D: Listar todos los idiomas que aportaron a otro"), width=30, textvariable=varCombo)
     menuOpciones.place(x=0,y=240)
 
     #print Options
