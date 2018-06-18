@@ -41,7 +41,7 @@ El primer paso a realizar, es seguir las instrucciones del apartado "Instalació
 Posteriormente a haber realizado las instalaciones necesarias, se procederá a ejecutar el programa, por medio de la siguiente instrucción:
 
 ```
-py Interfaz.py
+python3 g04.py
 ```
 
 El cual desplegará la interfaz principal. Donde en en la barra de menu se tienen las opciones de Operaciones, Ayuda, Acerca de y Salir.
