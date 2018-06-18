@@ -349,38 +349,50 @@ contribucionXidioma(IH, IP, T) <=  (T==nPalabrasXidioma[IH, IP])
 ## Operaciones entre palabras
 
 ### Determinar si dos palabras son hermanas
-### Determinar si dos palabras son primas
-### Determinar si una palabra es hija de otra
-### Determinar si una palabra es tia de otra
-### Determinar si son primas y en qué grado. 
 
-## Operaciones entre palabras e idioma
-
-### Determinar si una palabra está relacionada a un idioma
-### Obtener un conjunto de todas las palabras de un idioma originadas por una palabra especifica
-### Listar los idiomas relacionados con una palabra
+![Alt text](imagenesReadme/consulta_hermanas.png)
 
 
 ## Operaciones entre idiomas
 
 ### Contar todas las palabras comunes entre dos idiomas
-### Listar todas las palabras comunes entre dos idiomas
-### Idioma que más aportó a otro. Basado en porcentaje
 
+![Alt text](imagenesReadme/consulta_comunes.png)
+
+
+### Idioma que más aportó a otro. Basado en porcentaje
 
 ![Alt text](imagenesReadme/idioma_idioma_idiomaMasAportoAOtro.png)
 
 
-### Listar todos los idiomas que aportaron a otro. Incluye porcentajes para los idiomas
-
 
 ## Distribución del trabajo
+
 
 | Nombre | Nota |
 | --- | --- |
 | Marcello Ávila Feoli | 100 |
 | Stefi Falcón Chávez | 100 |
 | Nelson Gómez Alvarado | 100 |
+
+
+Finalmente, en cuanto a la contribución de cada uno de los integrantes del equipo al proyecto, es importante mencionar que los tres miembros, participaron activa, equitativa e integralmente. A continuación, se detalla por cada estudiante, su contribución específica en el desarrollo de este proyecto:
+
+*Marcello Ávila Feoli*
+- Carga de datos y optimización del manejo de los mismos.
+- Pruebas unitarias.
+- Elaboración del informe del proyecto.
+
+*Stefi Falcón Chávez*
+- Elaboración de las consultas en PyDataLog.
+- Elaboración del instalador utilizando Pip.
+- Elaboración del informe del proyecto.
+
+*Nelson Gómez Alvarado*
+- Desarrollo de la interfaz gráfica del programa e integración de la misma con el backend.
+- Elaboración del informe del proyecto.
+
+Se puede concluir, con toda certeza, que fue un trabajo realizado en equipo, y con total sinergia, donde hubo una integración técnica de los conocimientos, pero de forma muy importante, también una unión muy personal y de compañerismo para conseguir satisfactoriamente una meta en común: realizar un proyecto que cumpliera de forma óptima con los requerimientos establecidos por el profesor.
 
 
 ## Referencias
