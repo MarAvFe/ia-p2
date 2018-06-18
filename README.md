@@ -51,7 +51,7 @@ En operaciones se cuenta con las operaciones principales del programa, operacion
 
 Luego, una vez seleccionada una opción, se desplegarán todos los wigets según la operación seleccionada.
 
-![alt text](imagenesReadme/vWigets.png.png)
+![alt text](imagenesReadme/vWigets.png)
 
 
 La ventana principal, cuenta con el panel "Relaciones a considerar", que posee un conjunto de checkboxes, que servirán para que el usuario pueda seleccionar el tipo de relación que desea utilizar durante la consulta a realizar:
@@ -271,9 +271,29 @@ getIdiomaPadre2(IH, IP, P, T) <= esHijo(IP, P, IH, H) & (IP!=IH) &(T==1)
 contribucionXidioma(IH, IP, T) <=  (T==nPalabrasXidioma[IH, IP])
 ```
 
-## Análisis del resultados
+## Análisis de resultados
 
-# FALTA
+## Operaciones entre palabras
+
+### Determinar si dos palabras son hermanas
+### Determinar si dos palabras son primas
+### Determinar si una palabra es hija de otra
+### Determinar si una palabra es tia de otra
+### Determinar si son primas y en qué grado. 
+
+## Operaciones entre palabras e idioma
+
+### Determinar si una palabra está relacionada a un idioma
+### Obtener un conjunto de todas las palabras de un idioma originadas por una palabra especifica
+### Listar los idiomas relacionados con una palabra
+
+
+## Operaciones entre idiomas
+
+### Contar todas las palabras comunes entre dos idiomas
+### Listar todas las palabras comunes entre dos idiomas
+### Idioma que más aportó a otro. Basado en porcentaje
+### Listar todos los idiomas que aportaron a otro. Incluye porcentajes para los idiomas
 
 
 ## Distribución del trabajo
@@ -283,7 +303,6 @@ contribucionXidioma(IH, IP, T) <=  (T==nPalabrasXidioma[IH, IP])
 | Marcello Ávila Feoli | 100 |
 | Stefi Falcón Chávez | 100 |
 | Nelson Gómez Alvarado | 100 |
-
 
 
 ## Referencias
