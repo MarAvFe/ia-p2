@@ -26,6 +26,7 @@ logging.basicConfig(stream=log_stream,level=logging.INFO)
 # logging.critical('critical is logged too!')
 # print(log_stream.getvalue())
 
+words, languages = bk.loadDBRels()
 
 
 def hello():
@@ -80,6 +81,7 @@ def var_states(derived,ety,related,origin,etymology,form,rel_from,ortho):
 
 
 def run_query(tipoQuery,entry1,entry2,opcion,textPath,textResult,varPrint):
+    global words
     textPath.delete('1.0', END)
     textResult.delete('1.0', END)
     print("Dato de text1 es: %s" % entry1.get())
@@ -91,9 +93,9 @@ def run_query(tipoQuery,entry1,entry2,opcion,textPath,textResult,varPrint):
     string2 = entry2.get()
 
     if (tipoQuery=="palabra_palabra"):
-        print("es del tipo palabra_palabra")
+        print("es del tipo palabra_palabra")        
         if(letraOpcion[0]=="A"):
-            resultado = bk.__sonHermanos(string1,string2)
+            resultado = bk.__sonHermanos(words[string1],words[string2])
             #imprime resultado
             textResult.insert(INSERT,resultado)
             #split al log_stream
@@ -102,7 +104,7 @@ def run_query(tipoQuery,entry1,entry2,opcion,textPath,textResult,varPrint):
             printTextosIdioma(listaResultado,textPath,varPrint)
 
         elif(letraOpcion[0]=="B"):
-            resultado = bk.__sonPrimas(string1,string2)
+            resultado = bk.__sonPrimas(words[string1],words[string2])
             #imprime resultado
             textResult.insert(INSERT,resultado)
             #split al log_stream
@@ -111,7 +113,7 @@ def run_query(tipoQuery,entry1,entry2,opcion,textPath,textResult,varPrint):
             printTextos(listaResultado,textPath,varPrint)
             
         elif(letraOpcion[0]=="C"):
-            resultado = bk.__esHija(string1,string2)
+            resultado = bk.__esHija(words[string1],words[string2])
             #imprime resultado
             textResult.insert(INSERT,resultado)
             #split al log_stream
@@ -119,7 +121,7 @@ def run_query(tipoQuery,entry1,entry2,opcion,textPath,textResult,varPrint):
             #verifica si debe imprimir todo o resumido
             printTextos(listaResultado,textPath,varPrint)
         elif(letraOpcion[0]=="D"):
-            resultado = bk.__esTia(string1,string2)
+            resultado = bk.__esTia(words[string1],words[string2])
             #imprime resultado
             textResult.insert(INSERT,resultado)
             #split al log_stream
@@ -128,7 +130,7 @@ def run_query(tipoQuery,entry1,entry2,opcion,textPath,textResult,varPrint):
             printTextos(listaResultado,textPath,varPrint)
             
         elif(letraOpcion[0]=="E"):
-            resultado = bk.__gradoPrimas(string1,string2)
+            resultado = bk.__gradoPrimas(words[string1],words[string2])
             #imprime resultado
             textResult.insert(INSERT,resultado)
             #split al log_stream
@@ -139,7 +141,7 @@ def run_query(tipoQuery,entry1,entry2,opcion,textPath,textResult,varPrint):
     if(tipoQuery=="palabra_idioma"):
         print("es del tipo palabra_idioma")
         if(letraOpcion[0]=="A"):
-            resultado = bk.__esPalabraRelacionadaIdioma(string1,string2)
+            resultado = bk.__esPalabraRelacionadaIdioma(words[string1],string2)
             #imprime resultado
             textResult.insert(INSERT,resultado)
             #split al log_stream
@@ -147,7 +149,7 @@ def run_query(tipoQuery,entry1,entry2,opcion,textPath,textResult,varPrint):
             #verifica si debe imprimir todo o resumido
             printTextos(listaResultado,textPath,varPrint)
         elif(letraOpcion[0]=="B"):
-            resultado = bk.__palabrasEnUnIdiomaOriginadasPorPalabra(string1,string2)
+            resultado = bk.__palabrasEnUnIdiomaOriginadasPorPalabra(words[string1],string2)
             #imprime resultado
             textResult.insert(INSERT,resultado)
             #split al log_stream
@@ -155,7 +157,7 @@ def run_query(tipoQuery,entry1,entry2,opcion,textPath,textResult,varPrint):
             #verifica si debe imprimir todo o resumido
             printTextos(listaResultado,textPath,varPrint)
         elif(letraOpcion[0]=="C"):
-            resultado = bk.__idiomasRelacionadosPalabra(string1)
+            resultado = bk.__idiomasRelacionadosPalabra(words[string1])
             #imprime resultado
             textResult.insert(INSERT,resultado)
             #split al log_stream
@@ -183,7 +185,7 @@ def run_query(tipoQuery,entry1,entry2,opcion,textPath,textResult,varPrint):
             #verifica si debe imprimir todo o resumido
             printTextosIdioma(listaResultado,textPath,varPrint)
         elif(letraOpcion[0]=="C"):
-            resultado = bk.__idiomaMasAporto(string1)
+            resultado = bk.__idiomaMasAporto(words[string1])
             #imprime resultado
             textResult.insert(INSERT,resultado)
             #split al log_stream
