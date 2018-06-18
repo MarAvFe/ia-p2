@@ -41,6 +41,30 @@ def printTextos(listaResultado, textPath, varPrint):
         for i in listaResultado:
             if("esHijo" in i):
                 textPath.insert(INSERT,i[33:] + '\n')
+
+
+def printTextosIdioma(listaResultado, textPath, varPrint):
+    print(varPrint.get())
+    if(varPrint.get()==1):
+        for i in listaResultado:
+            textPath.insert(INSERT,i[33:] + '\n')
+    else:
+        for i in listaResultado:
+            if("esHijo" in i):
+                #textPath.insert(INSERT,i[33:] + '\n')
+                toPrint = i[33:]
+                result = []
+                for k in toPrint.split("'"):
+                    print("k es" + k)
+                    if k[0] == 'w' and k[-2] == 'w':
+                        print("k en 0 es: " + k[0])
+                        print("k en -2 es: " + k[-2])
+                        result.append(bk.readFileWord(k))
+                        #print("result es: " + result)
+                    else:
+                        result.append(k)
+                toPrint = ''.join(toPrint)
+                textPath.insert(INSERT,toPrint + '\n')
     
 
 def var_states(derived,ety,related,origin,etymology,form,rel_from,ortho):
@@ -75,7 +99,7 @@ def run_query(tipoQuery,entry1,entry2,opcion,textPath,textResult,varPrint):
             #split al log_stream
             listaResultado = log_stream.getvalue().splitlines()
             #verifica si debe imprimir todo o resumido
-            printTextos(listaResultado,textPath,varPrint)
+            printTextosIdioma(listaResultado,textPath,varPrint)
 
         elif(letraOpcion[0]=="B"):
             resultado = bk.__sonPrimas(string1,string2)
@@ -148,7 +172,7 @@ def run_query(tipoQuery,entry1,entry2,opcion,textPath,textResult,varPrint):
             #split al log_stream
             listaResultado = log_stream.getvalue().splitlines()
             #verifica si debe imprimir todo o resumido
-            printTextos(listaResultado,textPath,varPrint)
+            printTextosIdioma(listaResultado,textPath,varPrint)
         elif(letraOpcion[0]=="B"):
             resultado = bk.__listarPalabrasComunesIdiomas(string1,string2)
             #imprime resultado
@@ -157,7 +181,7 @@ def run_query(tipoQuery,entry1,entry2,opcion,textPath,textResult,varPrint):
             #split al log_stream
             listaResultado = log_stream.getvalue().splitlines()
             #verifica si debe imprimir todo o resumido
-            printTextos(listaResultado,textPath,varPrint)
+            printTextosIdioma(listaResultado,textPath,varPrint)
         elif(letraOpcion[0]=="C"):
             resultado = bk.__idiomaMasAporto(string1)
             #imprime resultado
@@ -165,7 +189,7 @@ def run_query(tipoQuery,entry1,entry2,opcion,textPath,textResult,varPrint):
             #split al log_stream
             listaResultado = log_stream.getvalue().splitlines()
             #verifica si debe imprimir todo o resumido
-            printTextos(listaResultado,textPath,varPrint)
+            printTextosIdioma(listaResultado,textPath,varPrint)
         elif(letraOpcion[0]=="D"):
             resultado = bk.__listarIdiomasAportaronOtro(string1)
             #imprime resultado
@@ -173,7 +197,7 @@ def run_query(tipoQuery,entry1,entry2,opcion,textPath,textResult,varPrint):
             #split al log_stream
             listaResultado = log_stream.getvalue().splitlines()
             #verifica si debe imprimir todo o resumido
-            printTextos(listaResultado,textPath,varPrint)
+            printTextosIdioma(listaResultado,textPath,varPrint)
 
 def salir():
     root.destroy()
