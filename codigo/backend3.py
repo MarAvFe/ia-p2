@@ -121,7 +121,7 @@ def readFileWord(respuesta):
 	linea = int(tmp[1])
 	izq = True if tmp[2] == '1' else False
 	global DATABASE
-	with open(DATABASE) as f:
+	with open(DATABASE,encoding="utf-8") as f:
 		for i, line in enumerate(f):
 			if i == linea:
 				if izq:
@@ -180,7 +180,7 @@ def __palabrasEnUnIdiomaOriginadasPorPalabra(_palabra, _idioma):
 		words = []
 		for r in consulta.answers:
 			words.append(r[0])
-			#words.append(readFileWord(r[0]))
+			words.append(readFileWord(r[0]))
 		return words
 	else:
 		return "No se obtuvo coincidencias"
@@ -204,7 +204,7 @@ def __listarPalabrasComunesIdiomas(_idiomaA, _idiomaB):
 		words = []
 		for r in consulta.answers:
 			words.append(r[0])
-			#words.append(readFileWord(r[0]))
+			words.append(readFileWord(r[0]))
 		return words
 	else:
 		return "No hubo coincidencia."
