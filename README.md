@@ -166,9 +166,82 @@ rel:etymology, son simétricas. Esto debido a que ambas relaciones tienen la mis
 
 El mismo caso sucede con las relaciones has_derived_form y is_derived_from.
 
-Así, para realizar la carga de datos y hechos en la base de conocimiento se tomaron las siguientes decisiones:
 
-# * FALTA
+## Procesamiento de la base de datos
+ 
+La base de datos de NOMBRE, es un archivo separato por tabulaciones, que describe los distintos tipos de relaciones etimológicas, una por linea, relacionando una palabra con otra, contando en total 6.031.429 relaciones.
+ 
+El paradigma de programación lógico, requiere cargar estas relaciones a memoria para que el motor PyDatalog pueda resolver consultas, sin embargo, la base de datos pesa ~300MB, por lo que el proceso de carga y búsqueda sobre estos datos es considerablemente pesado. Esto motiva al equipo a buscar métodos eficientes de procesamiento de la entrada para acelerar la carga y aumentar la usabilidad de la herramienta
+ 
+### Hechos
+Un hecho de pyDatalog se define con una relación y una cantidad N de elementos. Esta relación puede tener un nombre cualquiera, que será definida por los mismos hechos. Los hechos tendrán la siguiente sintáxis:
+```
+relación(elemento1, elemento2, ..., elementoN)
+```
+ 
+### Carga en pyDatalog por assert_fact()
+Uno de los métodos de carga de hechos dentro del motor de PyDatalog, es cargar una sola sentencia de la manera
+```
+assert_fact('relación(elemento1, elemento2, ..., elementoN)')
+```
+Por lo que se ejecuta la instrucción por cada una de las lineas de la base de datos.
+ 
+### Carga en pyDatalog por load()
+El otro método para agregar hechos al motor, es por medio de la función `load()` que evalúa un string y lo descompone por cambios de linea. Esto permite cargar múltiples hechos con una sola instrucción.
+ 
+### Utilización de memoria
+ 
+Cada una de las relaciones que se guardan en la base significa los bytes del nombre de la relación, y de cada uno de los elementos. Así, cargar toda la base puede significar en aprox. 6.1GB, lo que típicamente en una computadora con 8GB de RAM y 4 procesadores de 2.8GHz, hasta 15-20min. sto reduce considerablemente la usabilidad de la herramienta pues requiere un largo tiempo de espera de arranque.
+ 
+### Acercamientos para optimizar la utilización de la herramienta
+El extenso tamaño de la base de datos, provee un reto computacional con múltiples puntos de exposición de errores. Por lo tanto es importante conocer cuales de las 3 operaciones para cargar hechos pueden tardar más que retracen el proceso.
+ 
+La carga de hechos desde la base de datos a la memoria se descompone en los siguientes pasos repetitivos:
+ 
+1. Leer la linea del archivo
+2. Descomponer la linea en sus 5 partes, separadas por tabulaciones o dos puntos (:):
+  - Idioma de la palabra de la izquierda
+  - La palabra de la izquierda
+  - El tipo de relación etimológica
+  - Idioma de la palabra de la derecha
+  - La palabra de la derecha
+3. Crear la relación según el tipo de relación
+ 
+#### Hilos
+Los hilos pretenden ejecutar múltiples tareas de de la creación de hechos, al mismo tiempo. De esta manera se puede ir recorriendo la base de datos, delegando la carga de hechos a la base de datos.
+ 
+Por el tipo de entrada, por medio de un archivo, lo mejor es hacer tal procedimiento de forma secuencial para evitar conflictos de lectura. Lo que se puede ejecutar de manera asincrónica, es la carga de los hechos.
+ 
+El flujo a seguir consiste en ir leyendo todas las lineas de la base de datos, agruparlas en strings de 100 lineas, y al haber 100 lineas, crear e iniciar un hilo y continuar leyendo el archivo. El hilo será quien se encarga de efectuar la función load() o assert_fact() con un string.
+ 
+El comportamiento observado fue que la lectura del archivo, podía terminar en unos 3 minutos con toda la base de datos. Sin embargo, investigando sobre PyDatalog, la librería es thread-safe, lo que incluye un manejo interno de semáforos para evitar conflictos de recursos. Por lo tanto los hilos están en una cola de espera. Aun cuando la lectura sea rápida, la cola tarda los mismos 15-20 minutos. Esto revela que el verdadero cuello de botella con la herramienta, es la creación de hechos en la memoria.
+ 
+#### Agrupaciones de hechos
+Este acercamiento busca probar si la función load con múltiples lineas y hechos por carga es más efectivo que múltiples llamadas a la función load(). Sin embargo este rendimiento no sufrió ningun cambio significativo por lo que fue rechazado.
+ 
+#### Uso de memoria
+Como parte de la optimización de la herramienta, se pretendió reducir el uso de memoria para cargar las relaciones, se busca crear un índice de palabras, para que las relaciones tengan menos caracteres que almacenar.
+ 
+Este método consiste en que al recorrer el archivo, se verifica si una palabra ya ha sido utilizada en el pasado y de ser así, se reutiliza el índice con la relación respectiva. Este índice se compone de la linea del archivo en que apareció la palabra y el lado de la relación en la linea.
+ 
+```
+wNumeroLineawLado
+NumeroLinea: 5392
+Lado: 1 | 2
+ 
+w34w1
+w34w2
+w56w2
+w1354w1
+```
+ 
+Para esto, se verifica si un diccionario contiene un índice para la palabra, y si no, se crea. Así se normaliza el espacio de las relaciones a strings de 4 a 10 caracteres como máximo, como por ejemplo los índices `w1w2` o `w6000492w1`. Además se crea el diccionario de palabras usadas que se carga en memoria.
+ 
+Sin tal diccionario, y asumiendo una base de datos de 6.000.000 de registros, se cargarían 12.000.000 de palabras en memoria diferentes (aunque sean repetidas). En cambio, la base contiene aproximadamente 2.745.791 palabras diferentes por lo que se estarían ahorrando 9.317.067 palabras en la memoria. Estas serían sustituidas con su respectivo índice que en la mayoría de casos el índice es más corto que la palabra pues las palabras tienen una extensión media de 10 caracteres, cuando los índices ocupan desde 4 hasta 10 caracteres, donde estos tienen una media de 7 caracteres.
+ 
+Estos índices permiten la recuperación de las palabras por medio de lecturas de acceso aleatorio en el archivo mediante la descomposión del índice y en muy reducidas ocasiones. En el caso de una consulta que diga cuáles palabras son derivadas de una, el motor resolverá la consulta para obtener unos 5 resultados, lo que permite leer el archivo 5 veces para buscar las respectivas lineas. Esta es una oprtunidad de optimización futura, de agrupar estas 5 lecturas en una sola lectura del archivo.
+
+
 
 ### Consultas
 
