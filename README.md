@@ -366,6 +366,11 @@ contribucionXidioma(IH, IP, T) <=  (T==nPalabrasXidioma[IH, IP])
 ### Contar todas las palabras comunes entre dos idiomas
 ### Listar todas las palabras comunes entre dos idiomas
 ### Idioma que más aportó a otro. Basado en porcentaje
+
+
+![Alt text](imagenesReadme/idioma_idioma_idiomaMasAportoAOtro.png)
+
+
 ### Listar todos los idiomas que aportaron a otro. Incluye porcentajes para los idiomas
 
 
