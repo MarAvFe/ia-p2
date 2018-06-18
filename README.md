@@ -169,7 +169,7 @@ El mismo caso sucede con las relaciones has_derived_form y is_derived_from.
 
 ## Procesamiento de la base de datos
  
-La base de datos de NOMBRE, es un archivo separato por tabulaciones, que describe los distintos tipos de relaciones etimológicas, una por linea, relacionando una palabra con otra, contando en total 6.031.429 relaciones.
+La base de datos de Etymological Wordnet (etymwn.tsv), es un archivo separado por tabulaciones, que describe los distintos tipos de relaciones etimológicas, una por linea, relacionando una palabra con otra, contando en total 6.031.429 relaciones.
  
 El paradigma de programación lógico, requiere cargar estas relaciones a memoria para que el motor PyDatalog pueda resolver consultas, sin embargo, la base de datos pesa ~300MB, por lo que el proceso de carga y búsqueda sobre estos datos es considerablemente pesado. Esto motiva al equipo a buscar métodos eficientes de procesamiento de la entrada para acelerar la carga y aumentar la usabilidad de la herramienta
  
